@@ -492,7 +492,9 @@ template LogyoMainWindow : He.ApplicationWindow {
           He.AppBar calendar_appbar {
             show-back: false;
           }
-          He.Bin calendar {}
+          He.Bin calendar {
+            vexpand: true;
+          }
         };
       }
 
@@ -511,7 +513,9 @@ template LogyoMainWindow : He.ApplicationWindow {
               label: _("Graph");
             };
           }
-          He.Bin graph {}
+          He.Bin graph {
+            vexpand: true;
+          }
         };
       }
     }

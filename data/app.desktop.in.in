@@ -4,4 +4,7 @@ Name = Logyo
 Comment = Log your feelings at the speed of thought
 Icon = @ICON_NAME@
 Exec = @COMMAND@
+Terminal = false
 Categories = GTK;GNOME;Utility;
+StartupNotify = true
+X-GNOME-UsesNotifications = true

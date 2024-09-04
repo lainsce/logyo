@@ -1,0 +1,5 @@
+{
+    "mesonbuild.configureOnOpen": true,
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
+    "C_Cpp.default.compileCommands": "/home/nayu/Projects/logyo/builddir/compile_commands.json"
+}

@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=Logyo
+Exec=/usr/bin/io.github.lainsce.Logyo --gapplication-service

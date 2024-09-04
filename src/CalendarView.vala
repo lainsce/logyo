@@ -30,17 +30,23 @@ public class Logyo.CalendarView : Gtk.Box {
         // Create the calendar grid
         calendar_grid = new Gtk.Grid() {
             column_homogeneous = true,
-            halign = Gtk.Align.CENTER,
             margin_end = GRID_MARGIN,
             margin_start = GRID_MARGIN,
-            margin_top = GRID_MARGIN / 3,
-            margin_bottom = GRID_MARGIN
         };
 
         // Add weekday labels
         add_weekday_labels();
 
-        append(calendar_grid);
+        var sw = new Gtk.ScrolledWindow () {
+            hexpand = true,
+            vexpand = true,
+            halign = Gtk.Align.CENTER,
+            margin_top = GRID_MARGIN / 2,
+            hscrollbar_policy = Gtk.PolicyType.NEVER
+        };
+        sw.set_child (calendar_grid);
+
+        append(sw);
         hexpand = true;
         vexpand = true;
 
@@ -49,7 +55,7 @@ public class Logyo.CalendarView : Gtk.Box {
     }
 
     private void add_weekday_labels() {
-        string[] weekdays = { _("Sun"), _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat") };
+        string[] weekdays = { _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun") };
         for (int i = 0; i < DAYS_IN_WEEK; i++) {
             var label = new Gtk.Label(weekdays[i]) {
                 hexpand = true,
@@ -114,8 +120,17 @@ public class Logyo.CalendarView : Gtk.Box {
         var next_month = date.add_months(1);
         var days_in_month = next_month.add_days(-1).get_day_of_month();
 
+        // Determine the first day of the month (0 = Monday, 1 = Tuesday, ..., 6 = Sunday)
+        int first_day_of_month = date.get_day_of_week() - 1;
+        if (first_day_of_month < 0) {
+            first_day_of_month = 6;
+        }
+
         // Create and add day widgets for all days in the month
         for (int day = 1; day <= days_in_month; day++) {
+            int grid_row = ((day + first_day_of_month - 1) / DAYS_IN_WEEK) + 1;
+            int grid_column = (day + first_day_of_month - 1) % DAYS_IN_WEEK;
+
             var day_widget = new Gtk.Box(Gtk.Orientation.VERTICAL, 4){
                 width_request = DAY_WIDTH,
                 height_request = DAY_WIDTH,
@@ -160,7 +175,7 @@ public class Logyo.CalendarView : Gtk.Box {
             }
 
             day_widget.add_css_class("day");
-            calendar_grid.attach(day_widget, (day - 1) % DAYS_IN_WEEK, ((day - 1) / DAYS_IN_WEEK) + 1);
+            calendar_grid.attach(day_widget, grid_column, grid_row);
         }
     }
 }

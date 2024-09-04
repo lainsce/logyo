@@ -54,6 +54,8 @@ dependencies = [
     dependency('libhelium-1'),
     dependency('gmodule-2.0'),
     dependency('json-glib-1.0'),
+    dependency('libportal', version: '>=0.5'),
+    dependency('libportal-gtk4', version: '>=0.5')
 ]
 
 executable(

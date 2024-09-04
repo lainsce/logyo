@@ -74,6 +74,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private CalendarView calendar_view;
     private MoodGridView graph_view;
 
+    private Xdp.Portal? portal = null;
+
     public MainWindow (He.Application application) {
         Object (
             application: application,
@@ -85,6 +87,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     }
 
     construct {
+        schedule_notifications ();
+
         var loaded_logs = Logyo.FileUtil.load_logs("logs.json");
         foreach (var log_widget in loaded_logs) {
             add_log_to_layout(log_widget);
@@ -255,6 +259,50 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 } else {
                 }
             }
+        });
+    }
+
+    private void schedule_notifications() {
+        var now = new DateTime.now_local();
+
+        // Set midday notification
+        var midday = new DateTime.local(now.get_year(), now.get_month(), now.get_day_of_month(), 12, 0, 0);
+        if (now.compare(midday) > 0) {
+            midday = midday.add_days(1);
+        }
+
+        // Set evening notification
+        var evening = new DateTime.local(now.get_year(), now.get_month(), now.get_day_of_month(), 18, 0, 0);
+        if (now.compare(evening) > 0) {
+            evening = evening.add_days(1);
+        }
+
+        schedule_notification(_("Midday Check-in"), _("How are you feeling today?"), midday);
+        schedule_notification(_("Evening Reflection"), _("Take a moment to reflect on your day."), evening);
+    }
+
+    private void schedule_notification(string title, string body, DateTime time) {
+        var notification = new Notification(title);
+        notification.set_body(body);
+        notification.set_priority(NotificationPriority.NORMAL);
+
+        uint seconds_until_notification = (uint)(time.difference(new DateTime.now_local()) / TimeSpan.SECOND);
+
+        GLib.Timeout.add_seconds(seconds_until_notification, () => {
+            app.send_notification(null, notification);
+            schedule_next_notification(title, body, time.add_days(1));
+            return false; // Do not repeat
+        });
+    }
+
+    private void schedule_next_notification(string title, string body, DateTime next_time) {
+        // Schedule the next notification for tomorrow
+        GLib.Timeout.add_seconds((uint)(next_time.difference(new DateTime.now_local()) / TimeSpan.SECOND), () => {
+            var notification = new Notification(title);
+            notification.set_body(body);
+            app.send_notification(null, notification);
+            schedule_next_notification(title, body, next_time.add_days(1));
+            return false;
         });
     }
 

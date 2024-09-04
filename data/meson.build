@@ -26,6 +26,7 @@ desktop_file = i18n.merge_file(
     install_dir: get_option('datadir') / 'applications',
 )
 
+
 desktop_file_validate = find_program('desktop-file-validate', required: false)
 if desktop_file_validate.found()
     test('validate-desktop', desktop_file_validate, args: [desktop_file])
@@ -84,6 +85,11 @@ if compile_schemas.found()
         args: ['--strict', '--dry-run', meson.current_source_dir()],
     )
 endif
+
+install_data(
+    'io.github.lainsce.Logyo.service',
+    install_dir: join_paths(get_option('datadir'), 'dbus-1', 'services')
+)
 
 # GResources allow you to bundle and reference assets within your application.
 # Resources are specified using a gresource file.
