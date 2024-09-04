@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>@APP_ID@</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Logyo</name>
+  <summary>Log your feelings at the speed of thought</summary>
+  <url type="homepage">https://github.com/lainsce/logyo</url>
+  <url type="bugtracker">https://github.com/lainsce/logyo</url>
+  <content_rating type="oars-1.0" />
+  <developer_name>Lains</developer_name>
+  <translation type="gettext">@GETTEXT_PACKAGE@</translation>
+  <launchable type="desktop-id">@APP_ID@.desktop</launchable>
+  <description>
+    <p>This is your go-to app for quickly logging your feelings. With its fast and intuitive interface, you can capture your emotions in seconds. Perfect for daily journaling or tracking your mood over time. Start logging your feelings effortlessly today!</p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/lainsce/logyo/raw/main/data/shot.png</image>
+      <caption>Main Window</caption>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="0.1.0" date="2025-01-01" />
+  </releases>
+</component>

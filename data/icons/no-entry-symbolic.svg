@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="16px"
+   viewBox="0 0 16 16"
+   width="16px"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="no-entry-symbolic.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="true"
+     inkscape:zoom="48.875"
+     inkscape:cx="7.9897698"
+     inkscape:cy="8"
+     inkscape:window-width="2560"
+     inkscape:window-height="983"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="true"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs16" />
+  <path
+     style="color:#000000;fill:#241f31;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+     d="M 8,1 C 4.1423025,1 1,4.142302 1,8 c 0,3.857699 3.1423025,7 7,7 3.857697,0 7,-3.142301 7,-7 C 15,4.142302 11.857697,1 8,1 Z m 0,1 c 3.101084,0 6,2.8989157 6,6 0,3.101084 -2.898916,6 -6,6 C 4.8989166,14 2,11.101084 2,8 2,4.8989157 4.8989166,2 8,2 Z"
+     id="path3240"
+     sodipodi:nodetypes="sssssccccc" />
+</svg>

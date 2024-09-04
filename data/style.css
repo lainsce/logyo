@@ -1,0 +1,85 @@
+.logyo-checkbutton {
+    background: @surface_container_lowest_bg_color;
+    padding: 12px 18px;
+    border-radius: 12px;
+}
+.logyo-checkbutton > box {
+    margin-left: 16px;
+}
+.logyo-feeling .bottom-sheet,
+.logyo-feeling .dialog-sheet {
+    background: radial-gradient(circle at center, mix(@accent_bg_color, @surface_bg_color, 0.6), mix(@accent_bg_color, @surface_bg_color, 0.99));
+}
+.logyo-feeling-flat .bottom-sheet,
+.logyo-feeling-flat .dialog-sheet {
+    background: linear-gradient(180deg, mix(@accent_bg_color, @surface_bg_color, 0.7), mix(@accent_bg_color, @surface_bg_color, 0.99));
+}
+
+.logyo-feeling-block {
+    color: @view_fg_color;
+}
+.logyo-feeling-block button {
+    background: none;
+    box-shadow: 0 0 0 1px @borders;
+    color: @view_fg_color;
+    min-height: 48px;
+    min-width: 48px;
+    -gtk-icon-size: 18px;
+}
+.logyo-feeling-block button:hover {
+    background: alpha(@error_bg_color, 0.08);
+    color: @error_bg_color;
+    box-shadow: 0 0 0 1px @error_bg_color;
+}
+.logyo-feeling-block button:active {
+    background: alpha(@error_bg_color, 0.14);
+    color: @error_bg_color;
+    box-shadow: 0 0 0 1px @error_bg_color;
+}
+.logyo-feeling-block.very-unpleasant {
+    background: mix(#5856D6, @surface_bg_color, 0.85);
+    color: mix(#5856D6, @surface_fg_color, 0.85);
+}
+.logyo-feeling-block.unpleasant {
+    background: mix(#AF52DE, @surface_bg_color, 0.85);
+    color: mix(AF52DE, @surface_fg_color, 0.85);
+}
+.logyo-feeling-block.slightly-unpleasant {
+    background: mix(#007AFF, @surface_bg_color, 0.85);
+    color: mix(#007AFF, @surface_fg_color, 0.85);
+}
+.logyo-feeling-block.neutral {
+    background: mix(#30B0C7, @surface_bg_color, 0.85);
+    color: mix(#30B0C7, @surface_fg_color, 0.85);
+}
+.logyo-feeling-block.slightly-pleasant {
+    background: mix(#309821, @surface_bg_color, 0.85);
+    color: mix(#309821, @surface_fg_color, 0.85);
+}
+.logyo-feeling-block.pleasant {
+    background: mix(#A89400, @surface_bg_color, 0.85);
+    color: mix(#A89400, @surface_fg_color, 0.85);
+}
+.logyo-feeling-block.very-pleasant {
+    background: mix(#FF9500, @surface_bg_color, 0.85);
+    color: mix(#FF9500, @surface_fg_color, 0.85);
+}
+
+.slider-caption {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.day {
+    box-shadow: inset 0 1px 0 0 @borders, inset 0 1px 0 0 @borders;
+    padding: 12px 0;
+    min-width: 52px;
+    min-height: 52px;
+}
+.day-logged {
+    opacity: 1;
+}
+.day-empty {
+    opacity: 0.32;
+}

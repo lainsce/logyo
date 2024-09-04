@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type = Application
+Name = Logyo
+Comment = Log your feelings at the speed of thought
+Icon = @ICON_NAME@
+Exec = @COMMAND@
+Categories = GTK;GNOME;Utility;

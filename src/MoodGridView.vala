@@ -1,0 +1,264 @@
+public class Logyo.MoodGridView : Gtk.Box {
+    private unowned List<LogWidget> logs;
+    private Gtk.DrawingArea drawing_area;
+    private uint graph_width = 365;
+    private uint graph_height = 365;
+    private bool show_all_daily_moods;
+
+    private Gtk.ToggleButton week_button;
+    private Gtk.ToggleButton two_week_button;
+    private Gtk.ToggleButton month_button;
+    private He.Switch show_all_daily_moods_switch;
+
+    public MoodGridView (List<LogWidget> logs) {
+        this.logs = logs;
+
+        this.orientation = Gtk.Orientation.VERTICAL;
+        this.spacing = 18;
+        this.margin_bottom = 18;
+        this.margin_start = 18;
+
+        var button_box = create_button_box();
+        this.append(button_box);
+
+        drawing_area = new Gtk.DrawingArea ();
+        drawing_area.set_content_width ((int)graph_width);
+        drawing_area.set_content_height ((int)graph_height);
+        drawing_area.add_css_class ("mood-graph");
+
+        drawing_area.set_draw_func ((area, cr, width, height) => {
+            draw_graph(cr, width, height, 7);
+        });
+
+        this.append (drawing_area);
+
+        show_all_daily_moods_switch = new He.Switch ();
+        if (show_all_daily_moods_switch.iswitch.active) {
+            show_all_daily_moods = true;
+            redraw ();
+        } else {
+            show_all_daily_moods = false;
+            redraw ();
+        }
+        show_all_daily_moods_switch.iswitch.notify["active"].connect (() => {
+            if (show_all_daily_moods_switch.iswitch.active) {
+                show_all_daily_moods = true;
+                redraw ();
+            } else {
+                show_all_daily_moods = false;
+                redraw ();
+            }
+        });
+
+        var label = new Gtk.Label ("Show All Daily Moods") {
+            valign = Gtk.Align.CENTER
+        };
+        label.add_css_class ("caption");
+        label.add_css_class ("dim-label");
+
+        var mood_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12);
+        mood_box.append (show_all_daily_moods_switch);
+        mood_box.append (label);
+
+        this.append (mood_box);
+    }
+
+    private Gtk.Box create_button_box() {
+        var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+        button_box.add_css_class("segmented-button");
+
+        // TRANSLATORS: First letter of the word Week.
+        week_button = new Gtk.ToggleButton.with_label(_("W"));
+
+        // TRANSLATORS: First letter of the word Week and saying it's 2 Weeks.
+        two_week_button = new Gtk.ToggleButton.with_label(_("2W"));
+        two_week_button.group = week_button;
+
+        // TRANSLATORS: First letter of the word Month.
+        month_button = new Gtk.ToggleButton.with_label(_("M"));
+        month_button.group = week_button;
+
+        week_button.set_active(true);
+
+        button_box.append(week_button);
+        button_box.append(two_week_button);
+        button_box.append(month_button);
+
+        week_button.clicked.connect(() => set_graph_period(7));
+        two_week_button.clicked.connect(() => set_graph_period(14));
+        month_button.clicked.connect(() => set_graph_period(30));
+
+        return button_box;
+    }
+
+    private void set_graph_period(int days) {
+        redraw_with_days(days);
+    }
+
+    public void redraw () {
+        if (logs.length () >= 7) {
+            set_graph_period(7);
+        } else if (logs.length () >= 21) {
+            set_graph_period(21);
+        } else if (logs.length () >= 30) {
+            set_graph_period(30);
+        }
+    }
+
+    private void redraw_with_days (int days) {
+        drawing_area.set_draw_func((area, cr, width, height) => {
+            draw_graph(cr, width, height, days);
+        });
+        drawing_area.queue_draw();
+    }
+
+    private void draw_graph(Cairo.Context cr, double width, double height, int days) {
+        if (logs == null) {
+            return; // Nothing to draw
+        }
+
+        if (logs.length() == 0) {
+            print("Subset logs is empty.\n");
+            return;
+        }
+
+        // Calculate graph dimensions and centering offsets
+        double graph_width = width - 36;  // Adjust as needed
+        double graph_height = height - 36;  // Adjust as needed
+        double offset_x = (width - graph_width) / 2;
+        double offset_y = (height - graph_height) / 2;
+
+        cr.save();
+        cr.translate(offset_x, offset_y);
+
+        cr.select_font_face("Geist", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+        cr.set_font_size(12.0);
+        cr.set_antialias(Cairo.Antialias.GRAY);
+
+        double step_x = graph_width / days;
+
+        // Draw faint grid lines and helpful text
+        int[] y_values = {0, 3, 6};
+        string[] labels = {_("Very Unpleasant"), "", _("Very Pleasant")};
+
+        foreach (int y_value in y_values) {
+            double y = graph_height - ((graph_height / 6.0) * y_value);
+            cr.set_source_rgba(0.5, 0.5, 0.5, 0.12);
+            cr.move_to(0, y);
+            cr.line_to(graph_width, y);
+            cr.stroke();
+        }
+
+        int yi = 0;
+        foreach (int y_value in y_values) {
+            double y = graph_height - ((graph_height / 6.0) * y_value);
+            cr.set_source_rgba(0.5, 0.5, 0.5, 0.66);
+
+            double text_x = 3.0;  // Distance from the left edge
+            double text_y = y + 3.0;
+
+            cr.move_to(text_x, text_y);
+            cr.show_text(labels[yi]);
+            yi++;
+        }
+
+        for (int i = 0; i <= days; i++) {
+            double x = i * step_x;
+            cr.set_source_rgba(0.5, 0.5, 0.5, 0.12);
+            cr.move_to(x, 0);
+            cr.line_to(x, graph_height);
+            cr.stroke();
+        }
+
+        // Draw the points
+        double point_radius = 6.0;
+        int index = 0;
+        foreach (LogWidget log in logs) {
+            if (!show_all_daily_moods) {
+                if (log == null || log.feeling_icon == null || log.time.contains ("@")) {
+                    continue;
+                }
+
+                double x = index * step_x;
+                double y = graph_height - ((get_mood_value(log.feeling_icon) - 1) / 6.0 * graph_height);
+                cr.arc(x, y, point_radius, 0, 2 * Math.PI);
+                cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
+                cr.fill();
+                index++;
+            } else {
+                if (log == null || log.feeling_icon == null) {
+                    continue;
+                }
+
+                int day_index = get_day_index(log);
+                double x = (day_index - 1) * step_x;
+                double y = graph_height - ((get_mood_value(log.feeling_icon) - 1) / 6.0 * graph_height);
+
+                // Count occurrences of the same mood on the same day
+                int mood_count = 0;
+                foreach (LogWidget log2 in logs) {
+                    if (get_day_index(log2) == day_index && log.feeling_icon == log2.feeling_icon) {
+                        mood_count++;
+                    }
+                }
+
+                double radius = point_radius + (mood_count == 1 ? 0 : mood_count);  // Base radius + increase based on mood count
+
+                cr.arc(x, y, radius, 0, 2 * Math.PI);
+                cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
+                cr.fill();
+                index++;
+            }
+        }
+    }
+
+    private int get_day_index (LogWidget log) {
+        string date_part;
+
+        // Check if the format includes time
+        if (log.time.contains ("@")) {
+            // Split at "@" and use the second part which contains the date
+            date_part = log.time.split ("@")[1].strip ();
+        } else {
+            // If there's no "@", the entire log.time is the date part
+            date_part = log.time;
+        }
+
+        // Split the date into day and month components
+        string[] date_components = date_part.split ("/");
+
+        if (date_components.length != 2) {
+            warning ("Unexpected date format: %s", log.time);
+            return -1;
+        }
+
+        int day = int.parse (date_components[0]);
+        return day;
+    }
+
+    private int get_mood_value (string feeling) {
+        switch (feeling) {
+            case "very-unpleasant": return 1;
+            case "unpleasant": return 2;
+            case "slightly-unpleasant": return 3;
+            case "neutral": return 4;
+            case "slightly-pleasant": return 5;
+            case "pleasant": return 6;
+            case "very-pleasant": return 7;
+            default: return 4;
+        }
+    }
+
+    private double[] get_color_for_mood (string feeling) {
+        switch (get_mood_value(feeling)) {
+            case 1: return {0.36, 0.1, 0.54};  // Adjusted indigo
+            case 2: return {0.60, 0.12, 0.60}; // Adjusted purple
+            case 3: return {0.12, 0.30, 1.0};  // Adjusted blue
+            case 4: return {0.0, 0.6, 0.6};    // Adjusted teal
+            case 5: return {0.0, 0.63, 0.0};   // Adjusted green
+            case 6: return {0.79, 0.79, 0.0};  // Adjusted yellow
+            case 7: return {1.0, 0.55, 0.10};  // Adjusted orange
+            default: return {0.0, 0.6, 0.6};   // fallback to teal
+        }
+    }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/io/github/lainsce/Logyo">
+    <file compressed="true" preprocess="xml-stripblanks" alias="mainwindow.ui">ui/mainwindow.ui</file>
+    <file compressed="true" alias="style.css">style.css</file>
+    <file compressed="true" alias="style_dark.css">style_dark.css</file>
+  </gresource>
+  <gresource prefix="/io/github/lainsce/Logyo/icons">
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/empty-page-symbolic.svg">icons/empty-page-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/month-filled-symbolic.svg">icons/month-filled-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/feelings-symbolic.svg">icons/feelings-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/feelings-filled-symbolic.svg">icons/feelings-filled-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/graph-symbolic.svg">icons/graph-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/graph-filled-symbolic.svg">icons/graph-filled-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/no-entry-symbolic.svg">icons/no-entry-symbolic.svg</file>
+
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/very-unpleasant.svg">icons/very-unpleasant.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/unpleasant.svg">icons/unpleasant.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/slightly-unpleasant.svg">icons/slightly-unpleasant.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/neutral.svg">icons/neutral.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/slightly-pleasant.svg">icons/slightly-pleasant.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/pleasant.svg">icons/pleasant.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/very-pleasant.svg">icons/very-pleasant.svg</file>
+  </gresource>
+</gresources>
