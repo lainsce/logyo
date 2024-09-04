@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/io/github/lainsce/Logyo">
     <file compressed="true" preprocess="xml-stripblanks" alias="mainwindow.ui">ui/mainwindow.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks" alias="prefs.ui">ui/prefs.ui</file>
     <file compressed="true" alias="style.css">style.css</file>
     <file compressed="true" alias="style_dark.css">style_dark.css</file>
   </gresource>

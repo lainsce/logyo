@@ -1,0 +1,22 @@
+using Gtk 4.0;
+using He 1;
+
+template LogyoPreferences: He.SettingsWindow {
+    [page]
+    He.SettingsPage {
+        margin-bottom: 12;
+
+        He.SettingsList {
+            hexpand: true;
+
+            He.SettingsRow {
+                title: "Run In Background";
+                hexpand: true;
+
+                He.Switch b {
+                    valign: start;
+                }
+            }
+        }
+    }
+}
