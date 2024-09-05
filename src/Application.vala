@@ -3,29 +3,35 @@ public class Logyo.Application : He.Application {
         { "quit", quit },
     };
 
-    public const OptionEntry[] APP_OPTIONS = {
-        { "silent", 's', 0, OptionArg.NONE, out silent,
-        "Run the Application in background", null},
+    private const string BACKGROUND = "background";
+    public static bool background;
+    private bool first_activation = true;
+
+    private const OptionEntry[] OPTIONS = {
+        { BACKGROUND, 'b', 0, OptionArg.NONE, out background, "Launch without showing a window and keep running in background.", null },
         { null }
     };
 
-    public static bool silent;
-    private bool first_activation = true;
-
-    private Settings _settings;
-    public Settings settings {
-        get {
-            return _settings;
-        }
-    }
-
     public Application () {
-        Object (application_id: Config.APP_ID);
+        Object (
+            application_id: Config.APP_ID,
+            flags: ApplicationFlags.FLAGS_NONE
+        );
     }
+
+    private const string PORTAL_BUS_NAME = "org.freedesktop.portal.Desktop";
+    private const string PORTAL_OBJECT_PATH = "/org/freedesktop/portal/desktop";
+    private const string PORTAL_INTERFACE = "org.freedesktop.portal.Background";
+
+    private DBusConnection? connection = null;
 
     construct {
-        flags |= ALLOW_REPLACEMENT;
-        add_main_option_entries (APP_OPTIONS);
+        add_main_option_entries (OPTIONS);
+        try {
+            connection = Bus.get_sync(BusType.SESSION);
+        } catch (Error e) {
+            error("Failed to connect to session bus: %s", e.message);
+        }
     }
 
     public static int main (string[] args) {
@@ -40,28 +46,23 @@ public class Logyo.Application : He.Application {
         return app.run (args);
     }
 
-    public override void activate () {
-        base.activate ();
-
+    protected override void activate () {
         if (first_activation) {
-            first_activation = false;
             hold ();
+            first_activation = false;
         }
 
-        if (silent) {
+        if (background) {
             request_background.begin ();
-            silent = false;
+            background = false;
             return;
         }
 
-        if (active_window == null) {
-            var main_window = new MainWindow (this);
-            add_window (main_window);
-        }
-
-        if (active_window != null) {
+        if (get_windows () != null) {
             this.active_window?.present ();
         }
+
+        new MainWindow (this);
     }
 
     public override void startup () {
@@ -81,32 +82,33 @@ public class Logyo.Application : He.Application {
         new MainWindow (this);
     }
 
-    public async void request_background () {
-        var portal = new Xdp.Portal ();
+    public async void request_background() {
+        if (connection == null) {
+            warning("DBus connection not established");
+            return;
+        }
 
-        Xdp.Parent? parent = active_window != null ? Xdp.parent_new_gtk (active_window) : null;
-
-        var command = new GenericArray<weak string> ();
-        command.add ("io.github.lainsce.Logyo");
-        command.add ("--silent");
+        var options = new VariantBuilder(new VariantType("a{sv}"));
+        options.add("{sv}", "handle_token", new Variant.string("logyo1"));
+        options.add("{sv}", "reason", new Variant.string("Application needs to run in the background"));
+        options.add("{sv}", "autostart", new Variant.boolean(true));
+        options.add("{sv}", "commandline", new Variant.strv({"io.github.lainsce.Logyo", "--background"}));
 
         try {
-            if (!yield portal.request_background (
-                parent,
-                _("Logyo will run in the background to notify when to log an emotion or mood entry for the day."),
-                (owned) command,
-                Xdp.BackgroundFlags.AUTOSTART,
-                null
-            )) {
-                release ();
-            }
+            yield connection.call(
+                PORTAL_BUS_NAME,
+                PORTAL_OBJECT_PATH,
+                PORTAL_INTERFACE,
+                "RequestBackground",
+                new Variant("(sa{sv})", "", options),
+                null,
+                DBusCallFlags.NONE,
+                -1
+            );
+
+            debug("Background running requested");
         } catch (Error e) {
-            if (e is IOError.CANCELLED) {
-                debug ("Request for autostart and background permissions denied: %s", e.message);
-                release ();
-            } else {
-                warning ("Failed to request autostart and background permissions: %s", e.message);
-            }
+            warning("Error requesting background running: %s", e.message);
         }
     }
 }

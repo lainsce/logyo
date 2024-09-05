@@ -86,11 +86,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     construct {
         schedule_notifications ();
-        close_request.connect (() => {
-            ((Application)application).request_background.begin (() => destroy ());
-
-            return Gdk.EVENT_STOP;
-        });
 
         var loaded_logs = Logyo.FileUtil.load_logs("logs.json");
         foreach (var log_widget in loaded_logs) {
@@ -263,6 +258,15 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 }
             }
         });
+
+        close_request.connect (() => {
+            on_delete ();
+            return false;
+        });
+    }
+
+    private void on_delete () {
+        ((Application) application).request_background.begin (() => destroy ());
     }
 
     private void schedule_notifications() {
