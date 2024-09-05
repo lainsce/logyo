@@ -267,6 +267,13 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 }
             }
         });
+
+        close_request.connect (() => on_close_request ());
+    }
+
+    private bool on_close_request () {
+        var res = Application.app.remove_this_window (this);
+        return res;
     }
 
     private void show_export_dialog (List<LogWidget> elogs) {
