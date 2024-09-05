@@ -86,6 +86,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     construct {
         schedule_notifications ();
+        close_request.connect (() => {
+            ((Application)application).request_background.begin (() => destroy ());
+
+            return Gdk.EVENT_STOP;
+        });
 
         var loaded_logs = Logyo.FileUtil.load_logs("logs.json");
         foreach (var log_widget in loaded_logs) {
@@ -370,15 +375,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 emo_image.icon_name = "very-pleasant";
                 break;
         }
-    }
-
-    public override bool close_request () {
-        // We want to wrap in Idle otherwise we crash because libportal hasn't unexported us yet.
-        ((Application) application).request_background.begin (() => Idle.add_once (() => {
-            destroy ();
-        }));
-
-        return true;
     }
 
     private void update_color(string clr) {

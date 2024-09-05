@@ -10,6 +10,7 @@ public class Logyo.Application : He.Application {
     };
 
     public static bool silent;
+    private bool first_activation = true;
 
     private Settings _settings;
     public Settings settings {
@@ -41,6 +42,11 @@ public class Logyo.Application : He.Application {
 
     public override void activate () {
         base.activate ();
+
+        if (first_activation) {
+            first_activation = false;
+            hold ();
+        }
 
         if (silent) {
             request_background.begin ();
