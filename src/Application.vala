@@ -78,8 +78,6 @@ public class Logyo.Application : He.Application {
         base.startup ();
 
         add_action_entries (APP_ENTRIES, this);
-
-        new MainWindow (this);
     }
 
     public async void request_background () {

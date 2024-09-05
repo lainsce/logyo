@@ -432,6 +432,11 @@ template LogyoMainWindow : He.ApplicationWindow {
             show-back: false;
             has-margins: false;
 
+            [titlebar-button]
+            He.Button export_button {
+              icon: "document-export-symbolic";
+            }
+
             [titlebar-menu]
             Gtk.MenuButton menu_button {
               icon-name: "open-menu-symbolic";

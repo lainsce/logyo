@@ -16,6 +16,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.MenuButton menu_button;
     [GtkChild]
+    private unowned He.Button export_button;
+    [GtkChild]
     private unowned He.OverlayButton add_button;
     [GtkChild]
     private unowned He.EmptyPage empty_page;
@@ -70,6 +72,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private List<LogWidget> logs = new List<LogWidget>();
     private List<LogWidget> logs2 = new List<LogWidget>();
+    private List<LogWidget> logs3 = new List<LogWidget>();
 
     private CalendarView calendar_view;
     private MoodGridView graph_view;
@@ -82,11 +85,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         );
 
         this.app = application;
+
+        schedule_notifications ();
     }
 
     construct {
-        schedule_notifications ();
-
         var loaded_logs = Logyo.FileUtil.load_logs("logs.json");
         foreach (var log_widget in loaded_logs) {
             add_log_to_layout(log_widget);
@@ -138,6 +141,10 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         graph_view = new MoodGridView (logs2);
         graph.child = graph_view;
+
+        export_button.clicked.connect(() => {
+            show_export_dialog(logs3);
+        });
 
         add_button.clicked.connect (on_add_clicked);
 
@@ -260,6 +267,114 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         });
     }
 
+    private void show_export_dialog(List<LogWidget> elogs) {
+        var dialog = new Gtk.FileChooserDialog (
+            "Export Chart",
+            this,
+            Gtk.FileChooserAction.SAVE,
+            "_Cancel", Gtk.ResponseType.CANCEL,
+            "_Export", Gtk.ResponseType.ACCEPT
+        );
+
+        dialog.set_current_name("mood_chart.html");
+
+        dialog.response.connect((response_id) => {
+            if (response_id == Gtk.ResponseType.ACCEPT) {
+                string? filename = dialog.get_file()?.get_path();
+                if (filename != null) {
+                    generate_html_chart(filename, elogs);
+                }
+            }
+            dialog.destroy();
+        });
+
+        dialog.show();
+    }
+
+    public void generate_html_chart(string output_file, List<LogWidget> plogs) {
+        string html_template = """
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Mood Chart</title>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        </head>
+        <body>
+            <canvas id="moodChart" width="365" height="200"></canvas>
+            <script>
+                var ctx = document.getElementById('moodChart').getContext('2d');
+                var moodChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [%s],
+                        datasets: [{
+                            label: 'Mood Entry',
+                            data: [%s],
+                            borderColor: '#30B0C7',
+                            borderWidth: 1,
+                            pointBackgroundColor: [%s],
+                            pointBorderColor: [%s],
+                            fill: false,
+                            tension: 0.25
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Mood'
+                                },
+                                min: 1,
+                                max: 7
+                            }
+                        }
+                    }
+                });
+            </script>
+        </body>
+        </html>
+        """;
+
+        // Prepare data for the chart
+        List<string> labels = new List<string>();
+        List<string> data = new List<string>();
+        List<string> point_colors = new List<string>();
+
+        foreach (var log in plogs) {
+            labels.append("\"%s\"".printf(log.time));
+            data.append(map_feeling_to_number(log.feeling_icon).to_string());
+            point_colors.append("\"%s\"".printf(get_color_for_feeling(log.feeling_icon)));
+        }
+
+        string label_str = join_labels(labels);
+        string data_str = join_labels(data);
+        string color_str = join_labels(point_colors);
+
+        // Generate final HTML
+        string html_content = html_template.printf(label_str, data_str, color_str, color_str);
+
+        FileUtils.set_contents (output_file, html_content);
+    }
+    private string join_labels(List<string> labels) {
+        var result = new StringBuilder();
+        for (int i = 0; i < labels.length (); i++) {
+            result.append(labels.nth_data (i));
+            if (i < labels.length () - 1) {
+                result.append(",");
+            }
+        }
+        return result.str;
+    }
+
     private void schedule_notifications() {
         var now = new DateTime.now_local();
 
@@ -309,6 +424,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         feelings_list.append (log_widget);
         logs.append(log_widget);
         logs2.append(log_widget);
+        logs3.append(log_widget);
         graph_view.redraw ();
     }
 
@@ -434,5 +550,31 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             He.AboutWindow.Licenses.GPLV3,
             He.Colors.MINT
         ).present ();
+    }
+
+    private int map_feeling_to_number(string feeling) {
+        switch (feeling) {
+            case "very-unpleasant": return 1;
+            case "unpleasant": return 2;
+            case "slightly-unpleasant": return 3;
+            case "neutral": return 4;
+            case "slightly-pleasant": return 5;
+            case "pleasant": return 6;
+            case "very-pleasant": return 7;
+            default: return 4;
+        }
+    }
+
+    private string get_color_for_feeling(string feeling) {
+        switch (feeling) {
+            case "very-unpleasant": return COLOR_VERY_UNPLEASANT;
+            case "unpleasant": return COLOR_UNPLEASANT;
+            case "slightly-unpleasant": return COLOR_SLIGHTLY_UNPLEASANT;
+            case "neutral": return COLOR_NEUTRAL;
+            case "slightly-pleasant": return COLOR_SLIGHTLY_PLEASANT;
+            case "pleasant": return COLOR_PLEASANT;
+            case "very-pleasant": return COLOR_VERY_UNPLEASANT;
+            default: return COLOR_NEUTRAL;
+        }
     }
 }
