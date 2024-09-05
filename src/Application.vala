@@ -8,7 +8,7 @@ public class Logyo.Application : He.Application {
     private bool first_activation = true;
 
     private const OptionEntry[] OPTIONS = {
-        { BACKGROUND, 'b', 0, OptionArg.NONE, out background, "Launch without showing a window and keep running in background.", null },
+        { BACKGROUND, 'b', 0, OptionArg.NONE, out background, "Launch and run in background.", null },
         { null }
     };
 
@@ -47,18 +47,18 @@ public class Logyo.Application : He.Application {
     }
 
     protected override void activate () {
-        if  (first_activation) {
+        if (first_activation) {
             hold ();
             first_activation = false;
         }
 
-        if  (background) {
+        if (background) {
             request_background.begin ();
             background = false;
             return;
         }
 
-        if  (get_windows () != null) {
+        if (get_windows () != null) {
             this.active_window?.present ();
         }
 
@@ -132,7 +132,7 @@ public class Logyo.Application : He.Application {
         });
     }
 
-    public async void request_background  () {
+    public async void request_background () {
         if (connection == null) {
             warning ("DBus connection not established");
             return;
@@ -140,7 +140,8 @@ public class Logyo.Application : He.Application {
 
         var options = new VariantBuilder (new VariantType ("a{sv}"));
         options.add ("{sv}", "handle_token", new Variant.string ("logyo1"));
-        options.add ("{sv}", "reason", new Variant.string ("Logyo needs to run in the background to send notifications"));
+        options.add ("{sv}", "reason",
+            new Variant.string ("Logyo needs to run in the background to send notifications"));
         options.add ("{sv}", "autostart", new Variant.boolean (false));
         options.add ("{sv}", "commandline", new Variant.strv ({"io.github.lainsce.Logyo", "--background"}));
 

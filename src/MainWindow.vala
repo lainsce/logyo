@@ -102,7 +102,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         var current_year = now.get_year ();
 
         var month_year_label = new He.ViewTitle () {
-            label = "%s/%d".printf (current_month < 10 ? "0" + current_month.to_string() : current_month.to_string(), current_year)
+            label = "%s/%d".printf (
+                current_month < 10 ?
+                "0" + current_month.to_string () :
+                current_month.to_string (), current_year
+            )
         };
         month_year_label.add_css_class ("numeric");
 
@@ -214,12 +218,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             }
         });
 
-        Gtk.Adjustment adj = new Gtk.Adjustment(3.0, 0.0, 6.0, 1.0, 0.0, 0.0);
+        Gtk.Adjustment adj = new Gtk.Adjustment (3.0, 0.0, 6.0, 1.0, 0.0, 0.0);
         emo_slider.scale.set_digits (0);
         emo_slider.scale.set_round_digits (0);
         emo_slider.scale.set_adjustment (adj);
 
-        emo_slider.scale.value_changed.connect(() => {
+        emo_slider.scale.value_changed.connect (() => {
             on_slider_value_changed (emo_slider.scale, emo_label);
         });
 
@@ -228,7 +232,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             if (stack.get_visible_child_name () == "description") {
                 stack.set_visible_child_name ("motivation");
             }
-        });;
+        });
 
         // Motivation
         next_button_m.clicked.connect (() => {
@@ -365,7 +369,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private string join_labels (List<string> labels) {
         var result = new StringBuilder ();
         for (int i = 0; i < labels.length (); i++) {
-            result.append(labels.nth_data (i));
+            result.append (labels.nth_data (i));
             if (i < labels.length () - 1) {
                 result.append (",");
             }
@@ -374,7 +378,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     }
 
     private void add_log_to_layout (LogWidget log_widget) {
-        log_widget.log_deleted.connect (() => { on_log_deleted(log_widget); });
+        log_widget.log_deleted.connect (() => { on_log_deleted (log_widget); });
         feelings_list.append (log_widget);
         logs.append (log_widget);
         logs2.append (log_widget);

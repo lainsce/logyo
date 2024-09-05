@@ -6,7 +6,7 @@ public struct Logyo.LogStruct {
     public string motivation;
 
     public Json.Node to_json () {
-        Json.Object obj = new Json.Object();
+        Json.Object obj = new Json.Object ();
         obj.set_string_member ("time", this.time);
         obj.set_string_member ("feeling", this.feeling);
         obj.set_string_member ("feeling-icon", this.feeling_icon);

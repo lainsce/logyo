@@ -125,7 +125,7 @@ public class Logyo.MoodGridView : Gtk.Box {
             return; // Nothing to draw
         }
 
-        if (logs.length() == 0) {
+        if (logs.length () == 0) {
             print ("Subset logs is empty.\n");
             return;
         }
@@ -258,7 +258,7 @@ public class Logyo.MoodGridView : Gtk.Box {
                     get_color_for_mood (log.feeling_icon)[1],
                     get_color_for_mood (log.feeling_icon)[2]
                 );
-                cr.fill();
+                cr.fill ();
             } else {
                 if (log == null || log.feeling_icon == null || log.time.contains ("@")) {
                     continue;
@@ -266,13 +266,13 @@ public class Logyo.MoodGridView : Gtk.Box {
 
                 double x = index * step_x;
                 double y = graph_height - ((get_mood_value (log.feeling_icon) - 1) / 6.0 * graph_height);
-                cr.arc(x, y, radius, 0, 2 * Math.PI);
-                cr.set_source_rgb(
+                cr.arc (x, y, radius, 0, 2 * Math.PI);
+                cr.set_source_rgb (
                     get_color_for_mood (log.feeling_icon)[0],
                     get_color_for_mood (log.feeling_icon)[1],
                     get_color_for_mood (log.feeling_icon)[2]
                 );
-                cr.fill();
+                cr.fill ();
                 index++;
             }
         }

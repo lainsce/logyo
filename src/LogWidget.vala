@@ -9,7 +9,7 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
     public string feeling_icon { get; set; }
     public string motivation { get; set; }
 
-    public signal void log_deleted();
+    public signal void log_deleted ();
 
     private LogStruct _log_struct;
     public LogStruct log_struct {
@@ -88,8 +88,8 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
     }
 
     private void update_labels () {
-        title.label = "%s - %s".printf(_log_struct.feeling, _log_struct.time);
-        subtitle.label = "%s - %s".printf(_log_struct.description, _log_struct.motivation);
+        title.label = "%s - %s".printf (_log_struct.feeling, _log_struct.time);
+        subtitle.label = "%s - %s".printf (_log_struct.description, _log_struct.motivation);
     }
 
     private void update_styling (string feel) {

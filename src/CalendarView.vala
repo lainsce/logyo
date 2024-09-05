@@ -135,7 +135,7 @@ public class Logyo.CalendarView : Gtk.Box {
             int grid_row = ((day + first_day_of_month - 1) / DAYS_IN_WEEK) + 1;
             int grid_column = (day + first_day_of_month - 1) % DAYS_IN_WEEK;
 
-            var day_widget = new Gtk.Box (Gtk.Orientation.VERTICAL, 4){
+            var day_widget = new Gtk.Box (Gtk.Orientation.VERTICAL, 4) {
                 width_request = DAY_WIDTH,
                 height_request = DAY_WIDTH,
                 halign = Gtk.Align.CENTER,
@@ -143,7 +143,7 @@ public class Logyo.CalendarView : Gtk.Box {
                 hexpand = true,
                 vexpand = true
             };
-            var day_label = new Gtk.Label ("%d".printf(day)){
+            var day_label = new Gtk.Label ("%d".printf (day)) {
                 halign = Gtk.Align.CENTER,
                 valign = Gtk.Align.CENTER,
                 hexpand = true,
