@@ -182,18 +182,58 @@ public class Logyo.MoodGridView : Gtk.Box {
         double point_radius = 6.0;
         int index = 0;
         foreach (LogWidget log in logs) {
-            if (!show_all_daily_moods) {
-                if (log == null || log.feeling_icon == null || log.time.contains ("@")) {
-                    continue;
+            if (show_all_daily_moods) {
+                // First pass: Draw backgrounds
+                for (int day = 1; day <= days; day++) {
+                    double x = (day - 1) * step_x;
+                    double top_y = double.MAX;
+                    double bottom_y = 0;
+                    string top_mood = "";
+                    string bottom_mood = "";
+
+                    foreach (LogWidget l in logs) {
+                        if (get_day_index(l) == day) {
+                            double y = graph_height - ((get_mood_value(l.feeling_icon) - 1) / 6.0 * graph_height);
+                            if (y < top_y) {
+                                top_y = y;
+                                top_mood = l.feeling_icon;
+                            }
+                            if (y > bottom_y) {
+                                bottom_y = y;
+                                bottom_mood = l.feeling_icon;
+                            }
+                        }
+                    }
+
+                    if (top_mood != "" && bottom_mood != "") {
+                        // Draw rounded rectangle background
+                        double padding = 2.0;
+                        double rect_width = 16.0;
+                        double rect_height = (bottom_y - top_y + point_radius * 2) + 4.0;
+                        double rect_x = x - 8.0;
+                        double rect_y = (top_y - point_radius) - padding;
+
+                        var pattern = new Cairo.Pattern.linear(rect_x, rect_y, rect_x, rect_y + rect_height);
+                        var top_color = get_color_for_mood(top_mood);
+                        var bottom_color = get_color_for_mood(bottom_mood);
+                        pattern.add_color_stop_rgba(0, top_color[0], top_color[1], top_color[2], 0.05);
+                        pattern.add_color_stop_rgba(1, bottom_color[0], bottom_color[1], bottom_color[2], 0.05);
+                        pattern.set_filter (Cairo.Filter.GAUSSIAN);
+
+                        cr.save();
+                        cr.new_sub_path();
+                        cr.arc(rect_x + rect_width - point_radius, rect_y + point_radius, 8.0, -Math.PI_2, 0);
+                        cr.arc(rect_x + rect_width - point_radius, rect_y + rect_height - point_radius, 8.0, 0, Math.PI_2);
+                        cr.arc(rect_x + point_radius, rect_y + rect_height - point_radius, 8.0, Math.PI_2, Math.PI);
+                        cr.arc(rect_x + point_radius, rect_y + point_radius, 8.0, Math.PI, -Math.PI_2);
+                        cr.close_path();
+                        cr.set_source(pattern);
+                        cr.fill();
+                        cr.restore();
+                    }
                 }
 
-                double x = index * step_x;
-                double y = graph_height - ((get_mood_value(log.feeling_icon) - 1) / 6.0 * graph_height);
-                cr.arc(x, y, point_radius, 0, 2 * Math.PI);
-                cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
-                cr.fill();
-                index++;
-            } else {
+                // Second pass: Draw points
                 if (log == null || log.feeling_icon == null) {
                     continue;
                 }
@@ -213,6 +253,16 @@ public class Logyo.MoodGridView : Gtk.Box {
                 double radius = point_radius + (mood_count == 1 ? 0 : mood_count);  // Base radius + increase based on mood count
 
                 cr.arc(x, y, radius, 0, 2 * Math.PI);
+                cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
+                cr.fill();
+            } else {
+                if (log == null || log.feeling_icon == null || log.time.contains ("@")) {
+                    continue;
+                }
+
+                double x = index * step_x;
+                double y = graph_height - ((get_mood_value(log.feeling_icon) - 1) / 6.0 * graph_height);
+                cr.arc(x, y, point_radius, 0, 2 * Math.PI);
                 cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
                 cr.fill();
                 index++;

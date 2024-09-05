@@ -258,15 +258,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 }
             }
         });
-
-        close_request.connect (() => {
-            on_delete ();
-            return false;
-        });
-    }
-
-    private void on_delete () {
-        ((Application) application).request_background.begin (() => destroy ());
     }
 
     private void schedule_notifications() {
