@@ -3,7 +3,14 @@ public class Logyo.Application : He.Application {
         { "quit", quit },
     };
 
-    private Portal _portal = new Portal ();
+    public const OptionEntry[] APP_OPTIONS = {
+        { "silent", 's', 0, OptionArg.NONE, out silent,
+        "Run the Application in background", null},
+        { null }
+    };
+
+    public static bool silent;
+
     private Settings _settings;
     public Settings settings {
         get {
@@ -13,6 +20,11 @@ public class Logyo.Application : He.Application {
 
     public Application () {
         Object (application_id: Config.APP_ID);
+    }
+
+    construct {
+        flags |= ALLOW_REPLACEMENT;
+        add_main_option_entries (APP_OPTIONS);
     }
 
     public static int main (string[] args) {
@@ -30,16 +42,20 @@ public class Logyo.Application : He.Application {
     public override void activate () {
         base.activate ();
 
-        if (active_window is MainWindow) {
-            active_window.present ();
-        } else {
-            open ({}, "");
+        if (silent) {
+            request_background.begin ();
+            silent = false;
+            return;
         }
-    }
 
-    public override void open (File[] files, string hint) {
-        var window = (active_window as MainWindow) ?? new MainWindow (this);
-        window.present ();
+        if (active_window == null) {
+            var main_window = new MainWindow (this);
+            add_window (main_window);
+        }
+
+        if (active_window != null) {
+            this.active_window?.present ();
+        }
     }
 
     public override void startup () {
@@ -59,8 +75,32 @@ public class Logyo.Application : He.Application {
         new MainWindow (this);
     }
 
-    public void request_background () {
-        _portal.request_background_async.begin (_("Logyo needs to stay open to notify you."),
-            (obj, res) => _portal.request_background_async.end (res));
+    public async void request_background () {
+        var portal = new Xdp.Portal ();
+
+        Xdp.Parent? parent = active_window != null ? Xdp.parent_new_gtk (active_window) : null;
+
+        var command = new GenericArray<weak string> ();
+        command.add ("io.github.lainsce.Logyo");
+        command.add ("--silent");
+
+        try {
+            if (!yield portal.request_background (
+                parent,
+                _("Logyo will run in the background to notify when to log an emotion or mood entry for the day."),
+                (owned) command,
+                Xdp.BackgroundFlags.AUTOSTART,
+                null
+            )) {
+                release ();
+            }
+        } catch (Error e) {
+            if (e is IOError.CANCELLED) {
+                debug ("Request for autostart and background permissions denied: %s", e.message);
+                release ();
+            } else {
+                warning ("Failed to request autostart and background permissions: %s", e.message);
+            }
+        }
     }
 }

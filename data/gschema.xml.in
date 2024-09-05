@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema path="@APP_PATH@" id="@APP_ID@">
-    <key name="background" type="b">
-      <default>false</default>
-      <summary>Keep running after window closed</summary>
-    </key>
   </schema>
 </schemalist>

@@ -4,7 +4,7 @@
 # This file is where you'll specify Blueprint files to compile.
 # You'll also need to add them to your gresources.xml file, in order to reference them from Vala.
 
-blueprint_sources = ['mainwindow.blp', 'prefs.blp']
+blueprint_sources = ['mainwindow.blp']
 
 blueprints = custom_target('blueprints',
     input: files(blueprint_sources),

@@ -43,8 +43,6 @@ sources = [
     'LogWidget.vala',
     'MainWindow.vala',
     'MoodGridView.vala',
-    'Portal.vala',
-    'Preferences.vala',
 ]
 
 dependencies = [
@@ -56,8 +54,8 @@ dependencies = [
     dependency('libhelium-1'),
     dependency('gmodule-2.0'),
     dependency('json-glib-1.0'),
-    dependency('libportal', version: '>=0.5'),
-    dependency('libportal-gtk4', version: '>=0.5')
+    dependency('libportal'),
+    dependency('libportal-gtk4')
 ]
 
 executable(

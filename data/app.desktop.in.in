@@ -1,10 +1,12 @@
 [Desktop Entry]
+Version = 1.5
 Type = Application
 Name = Logyo
 Comment = Log your feelings at the speed of thought
 Icon = @ICON_NAME@
-Exec = @COMMAND@
+Exec = @COMMAND@ %U
 Terminal = false
 Categories = GTK;GNOME;Utility;
 StartupNotify = true
+SingleMainWindow = true
 X-GNOME-UsesNotifications = true

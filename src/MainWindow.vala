@@ -11,7 +11,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private const GLib.ActionEntry APP_ENTRIES[] = {
         { "about", action_about },
-        { "prefs", action_prefs },
     };
 
     [GtkChild]
@@ -259,19 +258,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 }
             }
         });
-
-        this.close_request.connect (on_close_request);
-    }
-
-    private bool on_close_request () {
-        var app = (Application) application;
-        var settings = new Settings ();
-        if (settings.settings.get_boolean ("background")) {
-            app.request_background ();
-            this.visible = false;
-            return true;
-        }
-        return false;
     }
 
     private void schedule_notifications() {
@@ -386,6 +372,15 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         }
     }
 
+    public override bool close_request () {
+        // We want to wrap in Idle otherwise we crash because libportal hasn't unexported us yet.
+        ((Application) application).request_background.begin (() => Idle.add_once (() => {
+            destroy ();
+        }));
+
+        return true;
+    }
+
     private void update_color(string clr) {
         Gdk.RGBA accent_color = { 0 };
         accent_color.parse (clr);
@@ -448,11 +443,5 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             He.AboutWindow.Licenses.GPLV3,
             He.Colors.MINT
         ).present ();
-    }
-
-    private void action_prefs () {
-        var settings = new Preferences (this);
-        settings.parent = this;
-        settings.present ();
     }
 }
