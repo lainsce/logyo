@@ -70,9 +70,9 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private He.Application app { get; set; }
 
-    private List<LogWidget> logs = new List<LogWidget>();
-    private List<LogWidget> logs2 = new List<LogWidget>();
-    private List<LogWidget> logs3 = new List<LogWidget>();
+    private List<LogWidget> logs = new List<LogWidget> ();
+    private List<LogWidget> logs2 = new List<LogWidget> ();
+    private List<LogWidget> logs3 = new List<LogWidget> ();
 
     private CalendarView calendar_view;
     private MoodGridView graph_view;
@@ -85,28 +85,26 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         );
 
         this.app = application;
-
-        schedule_notifications ();
     }
 
     construct {
-        var loaded_logs = Logyo.FileUtil.load_logs("logs.json");
+        var loaded_logs = Logyo.FileUtil.load_logs ("logs.json");
         foreach (var log_widget in loaded_logs) {
-            add_log_to_layout(log_widget);
+            add_log_to_layout (log_widget);
         }
 
         calendar_view = new CalendarView (logs);
         calendar.child = calendar_view;
 
         // Initialize the current month and year
-        var now = new DateTime.now_local();
-        var current_month = now.get_month();
-        var current_year = now.get_year();
+        var now = new DateTime.now_local ();
+        var current_month = now.get_month ();
+        var current_year = now.get_year ();
 
         var month_year_label = new He.ViewTitle () {
-            label = "%s/%d".printf(current_month < 10 ? "0" + current_month.to_string() : current_month.to_string(), current_year)
+            label = "%s/%d".printf (current_month < 10 ? "0" + current_month.to_string() : current_month.to_string(), current_year)
         };
-        month_year_label.add_css_class("numeric");
+        month_year_label.add_css_class ("numeric");
 
         var prev_button = new He.Button ("go-previous", "") {
             is_disclosure = true
@@ -115,19 +113,19 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             is_disclosure = true
         };
 
-        prev_button.clicked.connect(() => {
-            calendar_view.change_month(-1, month_year_label);
+        prev_button.clicked.connect (() => {
+            calendar_view.change_month (-1, month_year_label);
         });
 
-        next_button.clicked.connect(() => {
-            calendar_view.change_month(1, month_year_label);
+        next_button.clicked.connect (() => {
+            calendar_view.change_month (1, month_year_label);
         });
         calendar_appbar.append (prev_button);
         calendar_appbar.append (next_button);
 
         calendar_appbar.viewtitle_widget = month_year_label;
 
-        if (feelings_list.get_first_child() != null) {
+        if (feelings_list.get_first_child () != null) {
             main_stack.visible_child_name = "list";
         } else {
             main_stack.visible_child_name = "empty";
@@ -142,8 +140,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         graph_view = new MoodGridView (logs2);
         graph.child = graph_view;
 
-        export_button.clicked.connect(() => {
-            show_export_dialog(logs3);
+        export_button.clicked.connect (() => {
+            show_export_dialog (logs3);
         });
 
         add_button.clicked.connect (on_add_clicked);
@@ -217,12 +215,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         });
 
         Gtk.Adjustment adj = new Gtk.Adjustment(3.0, 0.0, 6.0, 1.0, 0.0, 0.0);
-        emo_slider.scale.set_digits(0);
-        emo_slider.scale.set_round_digits(0);
+        emo_slider.scale.set_digits (0);
+        emo_slider.scale.set_round_digits (0);
         emo_slider.scale.set_adjustment (adj);
 
         emo_slider.scale.value_changed.connect(() => {
-            on_slider_value_changed(emo_slider.scale, emo_label);
+            on_slider_value_changed (emo_slider.scale, emo_label);
         });
 
         // Description
@@ -245,8 +243,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                     motivation_entry.get_internal_entry ().text
                 };
                 var log_widget = new LogWidget (log_struct);
-                add_log_to_layout(log_widget);
-                Logyo.FileUtil.save_logs(logs, "logs.json");
+                add_log_to_layout (log_widget);
+                Logyo.FileUtil.save_logs (logs, "logs.json");
                 sheet.show_sheet = false;
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
@@ -267,7 +265,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         });
     }
 
-    private void show_export_dialog(List<LogWidget> elogs) {
+    private void show_export_dialog (List<LogWidget> elogs) {
         var dialog = new Gtk.FileChooserDialog (
             "Export Chart",
             this,
@@ -276,22 +274,22 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             "_Export", Gtk.ResponseType.ACCEPT
         );
 
-        dialog.set_current_name("mood_chart.html");
+        dialog.set_current_name ("mood_chart.html");
 
-        dialog.response.connect((response_id) => {
+        dialog.response.connect ((response_id) => {
             if (response_id == Gtk.ResponseType.ACCEPT) {
-                string? filename = dialog.get_file()?.get_path();
+                string? filename = dialog.get_file ()?.get_path ();
                 if (filename != null) {
-                    generate_html_chart(filename, elogs);
+                    generate_html_chart (filename, elogs);
                 }
             }
-            dialog.destroy();
+            dialog.destroy ();
         });
 
-        dialog.show();
+        dialog.show ();
     }
 
-    public void generate_html_chart(string output_file, List<LogWidget> plogs) {
+    public void generate_html_chart (string output_file, List<LogWidget> plogs) {
         string html_template = """
         <!DOCTYPE html>
         <html lang='en'>
@@ -345,86 +343,42 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         """;
 
         // Prepare data for the chart
-        List<string> labels = new List<string>();
-        List<string> data = new List<string>();
-        List<string> point_colors = new List<string>();
+        List<string> labels = new List<string> ();
+        List<string> data = new List<string> ();
+        List<string> point_colors = new List<string> ();
 
         foreach (var log in plogs) {
-            labels.append("\"%s\"".printf(log.time));
-            data.append(map_feeling_to_number(log.feeling_icon).to_string());
-            point_colors.append("\"%s\"".printf(get_color_for_feeling(log.feeling_icon)));
+            labels.append ("\"%s\"".printf (log.time));
+            data.append (map_feeling_to_number (log.feeling_icon).to_string ());
+            point_colors.append ("\"%s\"".printf (get_color_for_feeling (log.feeling_icon)));
         }
 
-        string label_str = join_labels(labels);
-        string data_str = join_labels(data);
-        string color_str = join_labels(point_colors);
+        string label_str = join_labels (labels);
+        string data_str = join_labels (data);
+        string color_str = join_labels (point_colors);
 
         // Generate final HTML
-        string html_content = html_template.printf(label_str, data_str, color_str, color_str);
+        string html_content = html_template.printf (label_str, data_str, color_str, color_str);
 
         FileUtils.set_contents (output_file, html_content);
     }
-    private string join_labels(List<string> labels) {
-        var result = new StringBuilder();
+    private string join_labels (List<string> labels) {
+        var result = new StringBuilder ();
         for (int i = 0; i < labels.length (); i++) {
             result.append(labels.nth_data (i));
             if (i < labels.length () - 1) {
-                result.append(",");
+                result.append (",");
             }
         }
         return result.str;
     }
 
-    private void schedule_notifications() {
-        var now = new DateTime.now_local();
-
-        // Set midday notification
-        var midday = new DateTime.local(now.get_year(), now.get_month(), now.get_day_of_month(), 12, 0, 0);
-        if (now.compare(midday) > 0) {
-            midday = midday.add_days(1);
-        }
-
-        // Set evening notification
-        var evening = new DateTime.local(now.get_year(), now.get_month(), now.get_day_of_month(), 18, 0, 0);
-        if (now.compare(evening) > 0) {
-            evening = evening.add_days(1);
-        }
-
-        schedule_notification(_("Midday Check-in"), _("How are you feeling today?"), midday);
-        schedule_notification(_("Evening Reflection"), _("Take a moment to reflect on your day."), evening);
-    }
-
-    private void schedule_notification(string title, string body, DateTime time) {
-        var notification = new Notification(title);
-        notification.set_body(body);
-        notification.set_priority(NotificationPriority.NORMAL);
-
-        uint seconds_until_notification = (uint)(time.difference(new DateTime.now_local()) / TimeSpan.SECOND);
-
-        GLib.Timeout.add_seconds(seconds_until_notification, () => {
-            app.send_notification(null, notification);
-            schedule_next_notification(title, body, time.add_days(1));
-            return false; // Do not repeat
-        });
-    }
-
-    private void schedule_next_notification(string title, string body, DateTime next_time) {
-        // Schedule the next notification for tomorrow
-        GLib.Timeout.add_seconds((uint)(next_time.difference(new DateTime.now_local()) / TimeSpan.SECOND), () => {
-            var notification = new Notification(title);
-            notification.set_body(body);
-            app.send_notification(null, notification);
-            schedule_next_notification(title, body, next_time.add_days(1));
-            return false;
-        });
-    }
-
-    private void add_log_to_layout(LogWidget log_widget) {
-        log_widget.log_deleted.connect(() => { on_log_deleted(log_widget); });
+    private void add_log_to_layout (LogWidget log_widget) {
+        log_widget.log_deleted.connect (() => { on_log_deleted(log_widget); });
         feelings_list.append (log_widget);
-        logs.append(log_widget);
-        logs2.append(log_widget);
-        logs3.append(log_widget);
+        logs.append (log_widget);
+        logs2.append (log_widget);
+        logs3.append (log_widget);
         graph_view.redraw ();
     }
 
@@ -433,8 +387,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         navrail.visible = false;
     }
 
-    private void on_slider_value_changed(Gtk.Scale slider, Gtk.Label label) {
-        int value = (int) slider.get_value();
+    private void on_slider_value_changed (Gtk.Scale slider, Gtk.Label label) {
+        int value = (int) slider.get_value ();
         string[] levels = {
             _("Very Unpleasant"),
             _("Unpleasant"),
@@ -446,7 +400,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         };
 
         // Update the label text
-        label.set_text(levels[value]);
+        label.set_text (levels[value]);
 
         switch (value) {
             case 0:
@@ -488,50 +442,56 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         }
     }
 
-    private void update_color(string clr) {
+    private void update_color (string clr) {
         Gdk.RGBA accent_color = { 0 };
         accent_color.parse (clr);
-        app.default_accent_color = He.from_gdk_rgba ({accent_color.red * 255, accent_color.green * 255, accent_color.blue * 255});
+        app.default_accent_color = He.from_gdk_rgba (
+            {
+                accent_color.red * 255,
+                accent_color.green * 255,
+                accent_color.blue * 255
+            }
+        );
     }
 
-    private void on_log_deleted(LogWidget log) {
-        var dialog = new He.Dialog(
+    private void on_log_deleted (LogWidget log) {
+        var dialog = new He.Dialog (
             true,
             this,
             _("Remove Entry?"),
             "",
             _("Permanently deleting this entry will remove it completely."),
             "dialog-error-symbolic",
-            new He.Button("", _("Remove Entry")) {
+            new He.Button ("", _("Remove Entry")) {
                 css_classes = { "meson-red" }
             },
             null
         );
 
-        dialog.primary_button.clicked.connect(() => {
-            logs.remove(log);
-            Logyo.FileUtil.save_logs(logs, "logs.json");
+        dialog.primary_button.clicked.connect (() => {
+            logs.remove (log);
+            Logyo.FileUtil.save_logs (logs, "logs.json");
             feelings_list.remove (log);
 
-            if (feelings_list.get_first_child() != null) {
+            if (feelings_list.get_first_child () != null) {
                 main_stack.visible_child_name = "list";
             } else {
                 main_stack.visible_child_name = "empty";
             }
 
-            var now = new DateTime.now_local();
-            var current_month = now.get_month();
-            var current_year = now.get_year();
+            var now = new DateTime.now_local ();
+            var current_month = now.get_month ();
+            var current_year = now.get_year ();
             calendar_view.update_calendar (current_month, current_year);
             graph_view.redraw ();
-            dialog.close();
+            dialog.close ();
         });
 
-        dialog.cancel_button.clicked.connect(() => {
-            dialog.close();
+        dialog.cancel_button.clicked.connect (() => {
+            dialog.close ();
         });
 
-        dialog.present();
+        dialog.present ();
     }
 
     private void action_about () {
@@ -552,7 +512,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         ).present ();
     }
 
-    private int map_feeling_to_number(string feeling) {
+    private int map_feeling_to_number (string feeling) {
         switch (feeling) {
             case "very-unpleasant": return 1;
             case "unpleasant": return 2;
@@ -565,7 +525,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         }
     }
 
-    private string get_color_for_feeling(string feeling) {
+    private string get_color_for_feeling (string feeling) {
         switch (feeling) {
             case "very-unpleasant": return COLOR_VERY_UNPLEASANT;
             case "unpleasant": return COLOR_UNPLEASANT;
