@@ -5,7 +5,6 @@ public class Logyo.Application : He.Application {
 
     private const string BACKGROUND = "background";
     public static bool background;
-    private bool first_activation = true;
 
     private const OptionEntry[] OPTIONS = {
         { BACKGROUND, 'b', 0, OptionArg.NONE, out background, "Launch and run in background.", null },
@@ -47,10 +46,10 @@ public class Logyo.Application : He.Application {
     }
 
     protected override void activate () {
-        if (first_activation) {
-            hold ();
-            first_activation = false;
-        }
+        base.activate ();
+
+        if (active_window != null)
+            return;
 
         if (background) {
             request_background.begin ();
@@ -58,11 +57,8 @@ public class Logyo.Application : He.Application {
             return;
         }
 
-        if (get_windows () != null) {
-            this.active_window?.present ();
-        }
-
-        new MainWindow (this);
+        var window = new MainWindow (this);
+        window.present ();
     }
 
     public override void startup () {
@@ -133,72 +129,16 @@ public class Logyo.Application : He.Application {
     }
 
     public async void request_background () {
-        if (connection == null) {
-            warning ("DBus connection not established");
-            return;
-        }
-
-        var options = new VariantBuilder (new VariantType ("a{sv}"));
-        options.add ("{sv}", "handle_token", new Variant.string ("logyo1"));
-        options.add ("{sv}", "reason",
-            new Variant.string ("Logyo needs to run in the background to send notifications"));
-        options.add ("{sv}", "autostart", new Variant.boolean (false));
-        options.add ("{sv}", "commandline", new Variant.strv ({"io.github.lainsce.Logyo", "--background"}));
-
         try {
-            var result = yield connection.call (
-                PORTAL_BUS_NAME,
-                PORTAL_OBJECT_PATH,
-                PORTAL_INTERFACE,
-                "RequestBackground",
-                new Variant ("(sa{sv})", "", options),
-                new VariantType ("(o)"),
-                DBusCallFlags.NONE,
-                -1,
-                null
-            );
-
-            string request_path;
-            result.get ("(o)", out request_path);
-            yield wait_for_response (request_path);
-        } catch (Error e) {
-            warning ("Error requesting background running: %s", e.message);
+            var portal = new Xdp.Portal.initable_new ();
+            var window = active_window;
+            var parent = Xdp.parent_new_gtk (window);
+            var reason = _("Logyo wants to run in background");
+            var cancellable = null;
+            yield portal.request_background (parent, reason, new GLib.GenericArray<weak string>(), NONE, cancellable);
+        } catch (GLib.Error error) {
+            warning ("Failed to request to run in background: %s", error.message);
+            background = false;
         }
-    }
-
-    private async void wait_for_response (string request_path) {
-        uint signal_id = 0;
-        signal_id = connection.signal_subscribe (
-            PORTAL_BUS_NAME,
-            "org.freedesktop.portal.Request",
-            "Response",
-            request_path,
-            null,
-            DBusSignalFlags.NONE,
-            (conn, sender_name, object_path, interface_name, signal_name, parameters) => {
-                uint32 response;
-                Variant results;
-                parameters.get ("(u@a{sv})", out response, out results);
-
-                switch (response) {
-                    case 0: // Success
-                        warning ("Background permission granted");
-                        break;
-                    case 1: // User cancelled
-                        warning ("User cancelled background permission request");
-                        break;
-                    case 2: // User dismissed
-                        warning ("User dismissed background permission request");
-                        break;
-                    default:
-                        warning ("Unknown response from background permission request: %u", response);
-                        break;
-                }
-
-                wait_for_response.callback ();
-            }
-        );
-
-        yield;
     }
 }

@@ -364,7 +364,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         // Generate final HTML
         string html_content = html_template.printf (label_str, data_str, color_str, color_str);
 
-        FileUtils.set_contents (output_file, html_content);
+        try {
+            FileUtils.set_contents (output_file, html_content);
+        } catch (Error e) {
+            // w/e lol
+        }
     }
     private string join_labels (List<string> labels) {
         var result = new StringBuilder ();

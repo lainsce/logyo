@@ -250,9 +250,9 @@ public class Logyo.MoodGridView : Gtk.Box {
                     }
                 }
 
-                double radius = radius + (mood_count == 1 ? 0 : mood_count);
+                double radius2 = radius + (mood_count == 1 ? 0 : mood_count);
 
-                cr.arc (x, y, radius, 0, 2 * Math.PI);
+                cr.arc (x, y, radius2, 0, 2 * Math.PI);
                 cr.set_source_rgb (
                     get_color_for_mood (log.feeling_icon)[0],
                     get_color_for_mood (log.feeling_icon)[1],
