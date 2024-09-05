@@ -58,17 +58,23 @@ public class Logyo.Application : He.Application {
             return;
         }
 
-        if  (get_windows  () != null) {
+        if  (get_windows () != null) {
             this.active_window?.present ();
         }
 
-        new MainWindow  (this);
+        new MainWindow (this);
     }
 
     public override void startup () {
         Gdk.RGBA accent_color = { 0 };
         accent_color.parse ("#30B0C7");
-        default_accent_color = He.from_gdk_rgba ({accent_color.red * 255, accent_color.green * 255, accent_color.blue * 255});
+        default_accent_color = He.from_gdk_rgba (
+            {
+                accent_color.red * 255,
+                accent_color.green * 255,
+                accent_color.blue * 255
+            }
+        );
         override_accent_color = true;
         override_dark_style = true;
         is_content = true;

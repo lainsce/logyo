@@ -26,8 +26,8 @@ public class Logyo.MoodGridView : Gtk.Box {
         this.margin_bottom = 18;
         this.margin_start = 18;
 
-        var button_box = create_button_box();
-        this.append(button_box);
+        var button_box = create_button_box ();
+        this.append (button_box);
 
         drawing_area = new Gtk.DrawingArea ();
         drawing_area.set_content_width ((int)graph_width);
@@ -35,7 +35,7 @@ public class Logyo.MoodGridView : Gtk.Box {
         drawing_area.add_css_class ("mood-graph");
 
         drawing_area.set_draw_func ((area, cr, width, height) => {
-            draw_graph(cr, width, height, 7);
+            draw_graph (cr, width, height, 7);
         });
 
         this.append (drawing_area);
@@ -71,62 +71,62 @@ public class Logyo.MoodGridView : Gtk.Box {
         this.append (mood_box);
     }
 
-    private Gtk.Box create_button_box() {
-        var button_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
-        button_box.add_css_class("segmented-button");
+    private Gtk.Box create_button_box () {
+        var button_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        button_box.add_css_class ("segmented-button");
 
         // TRANSLATORS: First letter of the word Week.
-        week_button = new Gtk.ToggleButton.with_label(_("W"));
+        week_button = new Gtk.ToggleButton.with_label (_("W"));
 
         // TRANSLATORS: First letter of the word Week and saying it's 2 Weeks.
-        two_week_button = new Gtk.ToggleButton.with_label(_("2W"));
+        two_week_button = new Gtk.ToggleButton.with_label (_("2W"));
         two_week_button.group = week_button;
 
         // TRANSLATORS: First letter of the word Month.
-        month_button = new Gtk.ToggleButton.with_label(_("M"));
+        month_button = new Gtk.ToggleButton.with_label (_("M"));
         month_button.group = week_button;
 
-        week_button.set_active(true);
+        week_button.set_active (true);
 
-        button_box.append(week_button);
-        button_box.append(two_week_button);
-        button_box.append(month_button);
+        button_box.append (week_button);
+        button_box.append (two_week_button);
+        button_box.append (month_button);
 
-        week_button.clicked.connect(() => set_graph_period(7));
-        two_week_button.clicked.connect(() => set_graph_period(14));
-        month_button.clicked.connect(() => set_graph_period(30));
+        week_button.clicked.connect (() => set_graph_period (7));
+        two_week_button.clicked.connect (() => set_graph_period (14));
+        month_button.clicked.connect (() => set_graph_period (30));
 
         return button_box;
     }
 
-    private void set_graph_period(int days) {
-        redraw_with_days(days);
+    private void set_graph_period (int days) {
+        redraw_with_days (days);
     }
 
     public void redraw () {
         if (logs.length () >= 7) {
-            set_graph_period(7);
+            set_graph_period (7);
         } else if (logs.length () >= 21) {
-            set_graph_period(21);
+            set_graph_period (21);
         } else if (logs.length () >= 30) {
-            set_graph_period(30);
+            set_graph_period (30);
         }
     }
 
     private void redraw_with_days (int days) {
-        drawing_area.set_draw_func((area, cr, width, height) => {
-            draw_graph(cr, width, height, days);
+        drawing_area.set_draw_func ((area, cr, width, height) => {
+            draw_graph (cr, width, height, days);
         });
-        drawing_area.queue_draw();
+        drawing_area.queue_draw ();
     }
 
-    private void draw_graph(Cairo.Context cr, double width, double height, int days) {
+    private void draw_graph (Cairo.Context cr, double width, double height, int days) {
         if (logs == null) {
             return; // Nothing to draw
         }
 
         if (logs.length() == 0) {
-            print("Subset logs is empty.\n");
+            print ("Subset logs is empty.\n");
             return;
         }
 
@@ -136,50 +136,50 @@ public class Logyo.MoodGridView : Gtk.Box {
         double offset_x = (width - graph_width) / 2;
         double offset_y = (height - graph_height) / 2;
 
-        cr.save();
-        cr.translate(offset_x, offset_y);
+        cr.save ();
+        cr.translate (offset_x, offset_y);
 
-        cr.select_font_face("Geist", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-        cr.set_font_size(12.0);
-        cr.set_antialias(Cairo.Antialias.GRAY);
+        cr.select_font_face ("Geist", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+        cr.set_font_size (12.0);
+        cr.set_antialias (Cairo.Antialias.GRAY);
 
         double step_x = graph_width / days;
 
         // Draw faint grid lines and helpful text
-        int[] y_values = {0, 3, 6};
-        string[] labels = {_("Very Unpleasant"), "", _("Very Pleasant")};
+        int[] y_values = { 0, 3, 6 };
+        string[] labels = { _("Very Unpleasant"), "", _("Very Pleasant") };
 
         foreach (int y_value in y_values) {
             double y = graph_height - ((graph_height / 6.0) * y_value);
-            cr.set_source_rgba(0.5, 0.5, 0.5, 0.12);
-            cr.move_to(0, y);
-            cr.line_to(graph_width, y);
-            cr.stroke();
+            cr.set_source_rgba (0.5, 0.5, 0.5, 0.12);
+            cr.move_to (0, y);
+            cr.line_to (graph_width, y);
+            cr.stroke ();
         }
 
         int yi = 0;
         foreach (int y_value in y_values) {
             double y = graph_height - ((graph_height / 6.0) * y_value);
-            cr.set_source_rgba(0.5, 0.5, 0.5, 0.66);
+            cr.set_source_rgba (0.5, 0.5, 0.5, 0.66);
 
             double text_x = 3.0;  // Distance from the left edge
             double text_y = y + 3.0;
 
-            cr.move_to(text_x, text_y);
-            cr.show_text(labels[yi]);
+            cr.move_to (text_x, text_y);
+            cr.show_text (labels[yi]);
             yi++;
         }
 
         for (int i = 0; i <= days; i++) {
             double x = i * step_x;
-            cr.set_source_rgba(0.5, 0.5, 0.5, 0.12);
-            cr.move_to(x, 0);
-            cr.line_to(x, graph_height);
-            cr.stroke();
+            cr.set_source_rgba (0.5, 0.5, 0.5, 0.12);
+            cr.move_to (x, 0);
+            cr.line_to (x, graph_height);
+            cr.stroke ();
         }
 
         // Draw the points
-        double point_radius = 6.0;
+        double radius = 6.0;
         int index = 0;
         foreach (LogWidget log in logs) {
             if (show_all_daily_moods) {
@@ -192,8 +192,8 @@ public class Logyo.MoodGridView : Gtk.Box {
                     string bottom_mood = "";
 
                     foreach (LogWidget l in logs) {
-                        if (get_day_index(l) == day) {
-                            double y = graph_height - ((get_mood_value(l.feeling_icon) - 1) / 6.0 * graph_height);
+                        if (get_day_index (l) == day) {
+                            double y = graph_height - ((get_mood_value (l.feeling_icon) - 1) / 6.0 * graph_height);
                             if (y < top_y) {
                                 top_y = y;
                                 top_mood = l.feeling_icon;
@@ -208,28 +208,28 @@ public class Logyo.MoodGridView : Gtk.Box {
                     if (top_mood != "" && bottom_mood != "") {
                         // Draw rounded rectangle background
                         double padding = 2.0;
-                        double rect_width = 16.0;
-                        double rect_height = (bottom_y - top_y + point_radius * 2) + 4.0;
-                        double rect_x = x - 8.0;
-                        double rect_y = (top_y - point_radius) - padding;
+                        double rwidth = 16.0;
+                        double rheight = (bottom_y - top_y + radius * 2) + 4.0;
+                        double rx = x - 8.0;
+                        double ry = (top_y - radius) - padding;
 
-                        var pattern = new Cairo.Pattern.linear(rect_x, rect_y, rect_x, rect_y + rect_height);
-                        var top_color = get_color_for_mood(top_mood);
-                        var bottom_color = get_color_for_mood(bottom_mood);
-                        pattern.add_color_stop_rgba(0, top_color[0], top_color[1], top_color[2], 0.05);
-                        pattern.add_color_stop_rgba(1, bottom_color[0], bottom_color[1], bottom_color[2], 0.05);
+                        var pattern = new Cairo.Pattern.linear (rx, ry, rx, ry + rheight);
+                        var top_color = get_color_for_mood (top_mood);
+                        var bottom_color = get_color_for_mood (bottom_mood);
+                        pattern.add_color_stop_rgba (0, top_color[0], top_color[1], top_color[2], 0.05);
+                        pattern.add_color_stop_rgba (1, bottom_color[0], bottom_color[1], bottom_color[2], 0.05);
                         pattern.set_filter (Cairo.Filter.GAUSSIAN);
 
-                        cr.save();
-                        cr.new_sub_path();
-                        cr.arc(rect_x + rect_width - point_radius, rect_y + point_radius, 8.0, -Math.PI_2, 0);
-                        cr.arc(rect_x + rect_width - point_radius, rect_y + rect_height - point_radius, 8.0, 0, Math.PI_2);
-                        cr.arc(rect_x + point_radius, rect_y + rect_height - point_radius, 8.0, Math.PI_2, Math.PI);
-                        cr.arc(rect_x + point_radius, rect_y + point_radius, 8.0, Math.PI, -Math.PI_2);
-                        cr.close_path();
-                        cr.set_source(pattern);
-                        cr.fill();
-                        cr.restore();
+                        cr.save ();
+                        cr.new_sub_path ();
+                        cr.arc (rx + rwidth - radius, ry + radius, 8.0, -Math.PI_2, 0);
+                        cr.arc (rx + rwidth - radius, ry + rheight - radius, 8.0, 0, Math.PI_2);
+                        cr.arc (rx + radius, ry + rheight - radius, 8.0, Math.PI_2, Math.PI);
+                        cr.arc (rx + radius, ry + radius, 8.0, Math.PI, -Math.PI_2);
+                        cr.close_path ();
+                        cr.set_source (pattern);
+                        cr.fill ();
+                        cr.restore ();
                     }
                 }
 
@@ -238,22 +238,26 @@ public class Logyo.MoodGridView : Gtk.Box {
                     continue;
                 }
 
-                int day_index = get_day_index(log);
+                int day_index = get_day_index (log);
                 double x = (day_index - 1) * step_x;
-                double y = graph_height - ((get_mood_value(log.feeling_icon) - 1) / 6.0 * graph_height);
+                double y = graph_height - ((get_mood_value (log.feeling_icon) - 1) / 6.0 * graph_height);
 
                 // Count occurrences of the same mood on the same day
                 int mood_count = 0;
                 foreach (LogWidget log2 in logs) {
-                    if (get_day_index(log2) == day_index && log.feeling_icon == log2.feeling_icon) {
+                    if (get_day_index (log2) == day_index && log.feeling_icon == log2.feeling_icon) {
                         mood_count++;
                     }
                 }
 
-                double radius = point_radius + (mood_count == 1 ? 0 : mood_count);  // Base radius + increase based on mood count
+                double radius = radius + (mood_count == 1 ? 0 : mood_count);
 
-                cr.arc(x, y, radius, 0, 2 * Math.PI);
-                cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
+                cr.arc (x, y, radius, 0, 2 * Math.PI);
+                cr.set_source_rgb (
+                    get_color_for_mood (log.feeling_icon)[0],
+                    get_color_for_mood (log.feeling_icon)[1],
+                    get_color_for_mood (log.feeling_icon)[2]
+                );
                 cr.fill();
             } else {
                 if (log == null || log.feeling_icon == null || log.time.contains ("@")) {
@@ -261,9 +265,13 @@ public class Logyo.MoodGridView : Gtk.Box {
                 }
 
                 double x = index * step_x;
-                double y = graph_height - ((get_mood_value(log.feeling_icon) - 1) / 6.0 * graph_height);
-                cr.arc(x, y, point_radius, 0, 2 * Math.PI);
-                cr.set_source_rgb(get_color_for_mood(log.feeling_icon)[0], get_color_for_mood(log.feeling_icon)[1], get_color_for_mood(log.feeling_icon)[2]);
+                double y = graph_height - ((get_mood_value (log.feeling_icon) - 1) / 6.0 * graph_height);
+                cr.arc(x, y, radius, 0, 2 * Math.PI);
+                cr.set_source_rgb(
+                    get_color_for_mood (log.feeling_icon)[0],
+                    get_color_for_mood (log.feeling_icon)[1],
+                    get_color_for_mood (log.feeling_icon)[2]
+                );
                 cr.fill();
                 index++;
             }
@@ -308,7 +316,7 @@ public class Logyo.MoodGridView : Gtk.Box {
     }
 
     private double[] get_color_for_mood (string feeling) {
-        switch (get_mood_value(feeling)) {
+        switch (get_mood_value (feeling)) {
             case 1: return COLOR_VERY_UNPLEASANT;
             case 2: return COLOR_UNPLEASANT;
             case 3: return COLOR_SLIGHTLY_UNPLEASANT;

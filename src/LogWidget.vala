@@ -18,11 +18,11 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
         }
         set {
             _log_struct = value;
-            update_labels();
+            update_labels ();
         }
     }
 
-    public LogWidget(LogStruct? log_struct) {
+    public LogWidget (LogStruct? log_struct) {
         LogStruct ls = { "", "", "Neutral", "neutral", "" };
         _log_struct = log_struct != null ? log_struct : ls;
 
@@ -37,49 +37,49 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
         };
         icon.pixel_size = 48;
 
-        title = new Gtk.Label("");
-        title.set_xalign(0);
+        title = new Gtk.Label ("");
+        title.set_xalign (0);
         title.add_css_class ("cb-title");
 
-        subtitle = new Gtk.Label("");
-        subtitle.set_xalign(0);
+        subtitle = new Gtk.Label ("");
+        subtitle.set_xalign (0);
         title.add_css_class ("cb-subtitle");
 
         var delete_button = new He.Button ("user-trash-symbolic", "") {
             valign = Gtk.Align.START
         };
         delete_button.add_css_class ("circular");
-        delete_button.clicked.connect(() => log_deleted());
+        delete_button.clicked.connect (() => log_deleted ());
 
         var label_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6) {
             hexpand = true,
             valign = Gtk.Align.CENTER
         };
-        label_box.append(icon);
-        label_box.append(title);
-        label_box.append(subtitle);
+        label_box.append (icon);
+        label_box.append (title);
+        label_box.append (subtitle);
 
         var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-        box.append(label_box);
-        box.append(delete_button);
+        box.append (label_box);
+        box.append (delete_button);
         add_css_class ("mini-content-block");
         add_css_class ("logyo-feeling-block");
 
         box.set_parent (this);
 
-        update_labels();
+        update_labels ();
         update_styling (_log_struct.feeling);
     }
 
-    public LogStruct from_log_struct() {
+    public LogStruct from_log_struct () {
         return _log_struct;
     }
-    public LogStruct to_log_struct() {
-        update_log_struct();
+    public LogStruct to_log_struct () {
+        update_log_struct ();
         return _log_struct;
     }
 
-    public virtual void update_log_struct() {
+    public virtual void update_log_struct () {
         _log_struct.time = time;
         _log_struct.feeling = feeling;
         _log_struct.feeling_icon = feeling_icon;
@@ -87,7 +87,7 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
         _log_struct.description = description;
     }
 
-    private void update_labels() {
+    private void update_labels () {
         title.label = "%s - %s".printf(_log_struct.feeling, _log_struct.time);
         subtitle.label = "%s - %s".printf(_log_struct.description, _log_struct.motivation);
     }
