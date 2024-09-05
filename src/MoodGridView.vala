@@ -5,6 +5,14 @@ public class Logyo.MoodGridView : Gtk.Box {
     private uint graph_height = 365;
     private bool show_all_daily_moods;
 
+    private const double[] COLOR_VERY_UNPLEASANT = { 0.345, 0.337, 0.839 };
+    private const double[] COLOR_UNPLEASANT = { 0.686, 0.322, 0.871 };
+    private const double[] COLOR_SLIGHTLY_UNPLEASANT = { 0.0, 0.478, 1.0 };
+    private const double[] COLOR_NEUTRAL = { 0.188, 0.690, 0.780 };
+    private const double[] COLOR_SLIGHTLY_PLEASANT = { 0.188, 0.596, 0.129 };
+    private const double[] COLOR_PLEASANT = { 0.659, 0.580, 0.0 };
+    private const double[] COLOR_VERY_PLEASANT = { 1.0, 0.584, 0.0 };
+
     private Gtk.ToggleButton week_button;
     private Gtk.ToggleButton two_week_button;
     private Gtk.ToggleButton month_button;
@@ -251,14 +259,14 @@ public class Logyo.MoodGridView : Gtk.Box {
 
     private double[] get_color_for_mood (string feeling) {
         switch (get_mood_value(feeling)) {
-            case 1: return {0.36, 0.1, 0.54};  // Adjusted indigo
-            case 2: return {0.60, 0.12, 0.60}; // Adjusted purple
-            case 3: return {0.12, 0.30, 1.0};  // Adjusted blue
-            case 4: return {0.0, 0.6, 0.6};    // Adjusted teal
-            case 5: return {0.0, 0.63, 0.0};   // Adjusted green
-            case 6: return {0.79, 0.79, 0.0};  // Adjusted yellow
-            case 7: return {1.0, 0.55, 0.10};  // Adjusted orange
-            default: return {0.0, 0.6, 0.6};   // fallback to teal
+            case 1: return COLOR_VERY_UNPLEASANT;
+            case 2: return COLOR_UNPLEASANT;
+            case 3: return COLOR_SLIGHTLY_UNPLEASANT;
+            case 4: return COLOR_NEUTRAL;
+            case 5: return COLOR_SLIGHTLY_PLEASANT;
+            case 6: return COLOR_PLEASANT;
+            case 7: return COLOR_VERY_PLEASANT;
+            default: return COLOR_NEUTRAL;   // fallback to NEUTRAL
         }
     }
 }
