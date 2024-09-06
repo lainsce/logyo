@@ -136,7 +136,6 @@ public class Logyo.MoodGridView : Gtk.Box {
         cr.set_antialias (Cairo.Antialias.GRAY);
 
         double step_x = graph_width / days;
-        double step_y = graph_height / 6.0;
 
         // Draw faint grid lines and helpful text
         int[] y_values = { 0, 3, 6 };

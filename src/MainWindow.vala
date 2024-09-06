@@ -148,7 +148,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (ColorConstants.COLOR_NEUTRAL);
+                update_color (ColorConstants.get_color_for_mood(3));
                 sheet.title = null;
                 navrail.visible = true;
                 emo_image.icon_name = "neutral-symbolic";
@@ -168,7 +168,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.back_button.set_visible (false);
                 sheet.remove_css_class ("logyo-feeling");
-                update_color (ColorConstants.COLOR_NEUTRAL);
+                update_color (ColorConstants.get_color_for_mood(3));
                 emo_slider.scale.set_value (3); // Neutral
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
@@ -182,7 +182,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 sheet.back_button.set_visible (false);
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (ColorConstants.COLOR_NEUTRAL);
+                update_color (ColorConstants.get_color_for_mood(3));
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
             }
@@ -194,7 +194,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("feeling");
                 sheet.back_button.set_visible (true);
                 sheet.add_css_class ("logyo-feeling");
-                update_color (ColorConstants.COLOR_NEUTRAL);
+                update_color (ColorConstants.get_color_for_mood(3));
                 emo_slider.scale.set_value (3); // Neutral
                 if (timed_cb.active == true) {
                     sheet.title = _("Emotion");
@@ -255,7 +255,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (ColorConstants.COLOR_NEUTRAL);
+                update_color (ColorConstants.get_color_for_mood(3));
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
                 description_entry.get_internal_entry ().text = "";
@@ -519,15 +519,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     }
 
     private string get_color_for_feeling (string feeling) {
-        switch (feeling) {
-            case "very-unpleasant": return ColorConstants.COLOR_VERY_UNPLEASANT;
-            case "unpleasant": return ColorConstants.COLOR_UNPLEASANT;
-            case "slightly-unpleasant": return ColorConstants.COLOR_SLIGHTLY_UNPLEASANT;
-            case "neutral": return ColorConstants.COLOR_NEUTRAL;
-            case "slightly-pleasant": return ColorConstants.COLOR_SLIGHTLY_PLEASANT;
-            case "pleasant": return ColorConstants.COLOR_PLEASANT;
-            case "very-pleasant": return ColorConstants.COLOR_VERY_UNPLEASANT;
-            default: return ColorConstants.COLOR_NEUTRAL;
-        }
+        return ColorConstants.get_color_for_mood(ColorConstants.get_mood_value(feeling));
     }
 }

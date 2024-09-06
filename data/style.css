@@ -8,7 +8,7 @@
 }
 .logyo-feeling .bottom-sheet,
 .logyo-feeling .dialog-sheet {
-    background: radial-gradient(circle at center, mix(@accent_container_color, @surface_bg_color, 0.99), mix(@accent_container_color, @surface_bg_color, 0.5));
+    background: radial-gradient(circle at center, mix(@accent_container_color, @surface_bg_color, 0.99), mix(@accent_container_color, @surface_bg_color, 0.66));
 }
 .logyo-feeling .bottom-sheet .disclosure-button,
 .logyo-feeling .dialog-sheet .disclosure-button {
@@ -33,7 +33,7 @@
 }
 .logyo-feeling .bottom-sheet scale trough slider,
 .logyo-feeling .dialog-sheet scale trough slider {
-    background: @surface_fg_color;
+    background: white;
     box-shadow: 0 2px 4px 0 alpha(@scrim, 0.32);
     min-height: 36px;
     min-width: 36px;
@@ -48,7 +48,7 @@
 }
 .logyo-feeling-flat .bottom-sheet,
 .logyo-feeling-flat .dialog-sheet {
-    background: mix(@accent_container_color, @surface_bg_color, 0.5);
+    background: linear-gradient(180deg, mix(@accent_container_color, @surface_bg_color, 0.8), @surface_bg_color);
 }
 .logyo-feeling-flat .bottom-sheet .text-button.pill-button,
 .logyo-feeling-flat .dialog-sheet .text-button.pill-button {
@@ -111,8 +111,8 @@
     color: mix(#309900, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.pleasant {
-    background: linear-gradient(180deg, mix(#A29500, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 50%);
-    color: mix(#A29500, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#707200, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 50%);
+    color: mix(#707200, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.very-pleasant {
     background: linear-gradient(180deg, mix(#FF7D13, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 50%);

@@ -134,7 +134,6 @@ public class Logyo.Application : He.Application {
             }
         );
         override_accent_color = true;
-        override_dark_style = true;
         is_content = true;
 
         resource_base_path = Config.APP_PATH;
