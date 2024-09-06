@@ -433,11 +433,6 @@ template LogyoMainWindow : He.ApplicationWindow {
             show-back: false;
             has-margins: false;
 
-            [titlebar-button]
-            He.Button export_button {
-              icon: "document-export-symbolic";
-            }
-
             [titlebar-menu]
             Gtk.MenuButton menu_button {
               icon-name: "open-menu-symbolic";
@@ -522,6 +517,11 @@ template LogyoMainWindow : He.ApplicationWindow {
 
           He.AppBar graph_appbar {
             show-back: false;
+
+            [titlebar-button]
+            He.Button export_button {
+              icon: "document-export-symbolic";
+            }
 
             viewtitle-widget: He.ViewTitle {
               label: _("Graph");

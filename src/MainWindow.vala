@@ -4,7 +4,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private const string COLOR_VERY_UNPLEASANT = "#5856D6";
     private const string COLOR_UNPLEASANT = "#AF52DE";
     private const string COLOR_SLIGHTLY_UNPLEASANT = "#007AFF";
-    private const string COLOR_NEUTRAL = "#30B0C7";
+    private const string COLOR_NEUTRAL = "#40A0B9";
     private const string COLOR_SLIGHTLY_PLEASANT = "#309821";
     private const string COLOR_PLEASANT = "#A89400";
     private const string COLOR_VERY_PLEASANT = "#FF9500";

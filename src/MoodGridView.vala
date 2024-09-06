@@ -5,13 +5,13 @@ public class Logyo.MoodGridView : Gtk.Box {
     private uint graph_height = 365;
     private bool show_all_daily_moods;
 
-    private const double[] COLOR_VERY_UNPLEASANT = { 0.345, 0.337, 0.839 };
-    private const double[] COLOR_UNPLEASANT = { 0.686, 0.322, 0.871 };
-    private const double[] COLOR_SLIGHTLY_UNPLEASANT = { 0.0, 0.478, 1.0 };
-    private const double[] COLOR_NEUTRAL = { 0.188, 0.690, 0.780 };
-    private const double[] COLOR_SLIGHTLY_PLEASANT = { 0.188, 0.596, 0.129 };
-    private const double[] COLOR_PLEASANT = { 0.659, 0.580, 0.0 };
-    private const double[] COLOR_VERY_PLEASANT = { 1.0, 0.584, 0.0 };
+    private const string COLOR_VERY_UNPLEASANT = "#5856D6";
+    private const string COLOR_UNPLEASANT = "#AF52DE";
+    private const string COLOR_SLIGHTLY_UNPLEASANT = "#007AFF";
+    private const string COLOR_NEUTRAL = "#40A0B9";
+    private const string COLOR_SLIGHTLY_PLEASANT = "#309821";
+    private const string COLOR_PLEASANT = "#A89400";
+    private const string COLOR_VERY_PLEASANT = "#FF9500";
 
     private Gtk.ToggleButton week_button;
     private Gtk.ToggleButton two_week_button;
@@ -317,14 +317,39 @@ public class Logyo.MoodGridView : Gtk.Box {
 
     private double[] get_color_for_mood (string feeling) {
         switch (get_mood_value (feeling)) {
-            case 1: return COLOR_VERY_UNPLEASANT;
-            case 2: return COLOR_UNPLEASANT;
-            case 3: return COLOR_SLIGHTLY_UNPLEASANT;
-            case 4: return COLOR_NEUTRAL;
-            case 5: return COLOR_SLIGHTLY_PLEASANT;
-            case 6: return COLOR_PLEASANT;
-            case 7: return COLOR_VERY_PLEASANT;
-            default: return COLOR_NEUTRAL;   // fallback to NEUTRAL
+            case 1: return convert_hex_to_rgb (COLOR_VERY_UNPLEASANT);
+            case 2: return convert_hex_to_rgb (COLOR_UNPLEASANT);
+            case 3: return convert_hex_to_rgb (COLOR_SLIGHTLY_UNPLEASANT);
+            case 4: return convert_hex_to_rgb (COLOR_NEUTRAL);
+            case 5: return convert_hex_to_rgb (COLOR_SLIGHTLY_PLEASANT);
+            case 6: return convert_hex_to_rgb (COLOR_PLEASANT);
+            case 7: return convert_hex_to_rgb (COLOR_VERY_PLEASANT);
+            default: return convert_hex_to_rgb (COLOR_NEUTRAL);   // fallback to NEUTRAL
         }
+    }
+
+    private double[] convert_hex_to_rgb (string hexcode) {
+        print ("HEX: %s\n", hexcode);
+
+        // 000000
+        // 012345
+        // R: 0 to 1
+        // G: 2 to 3
+        // B: 4 to 5
+        string hex = hexcode.replace("#", "");
+        int length = 2;
+        uint red = uint.parse (hex.substring(0, length), 16);
+        uint green = uint.parse (hex.substring(2, length), 16);
+        uint blue = uint.parse (hex.substring(4, length), 16);
+
+        double[] rgb = {
+            (double)red / 255,
+            (double)green / 255,
+            (double)blue / 255
+        };
+
+        print ("RGB: %0.4f, %0.4f, %0.4f\n", rgb[0], rgb[1], rgb[2]);
+
+        return rgb;
     }
 }
