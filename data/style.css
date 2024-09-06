@@ -27,6 +27,25 @@
 .logyo-feeling .dialog-sheet .text-button.pill-button:active {
     background: shade(@accent_container_color, 0.86);
 }
+.logyo-feeling .bottom-sheet scale trough highlight,
+.logyo-feeling .dialog-sheet scale trough highlight {
+    background: none;
+}
+.logyo-feeling .bottom-sheet scale trough slider,
+.logyo-feeling .dialog-sheet scale trough slider {
+    background: @surface_fg_color;
+    box-shadow: 0 2px 4px 0 alpha(@scrim, 0.32);
+    min-height: 36px;
+    min-width: 36px;
+    margin: 0;
+    padding: 0;
+    border-radius: 99px;
+}
+.logyo-feeling .bottom-sheet scale trough,
+.logyo-feeling .dialog-sheet scale trough {
+    background: alpha(@surface_fg_color, 0.10);
+    border-radius: 99px;
+}
 .logyo-feeling-flat .bottom-sheet,
 .logyo-feeling-flat .dialog-sheet {
     background: linear-gradient(180deg, mix(@accent_container_color, @surface_bg_color, 0.7), mix(@accent_container_color, @surface_bg_color, 0.99));
@@ -51,7 +70,7 @@
     min-height: 305px;
     min-width: 263px;
     margin-right: 6px;
-    box-shadow: 0 2px 4px 0 @scrim;
+    box-shadow: 0 2px 4px 0 alpha(@scrim, 0.32);
 }
 .logyo-feeling-block button {
     background: none;
@@ -72,32 +91,32 @@
     box-shadow: 0 0 0 1px @error_bg_color;
 }
 .logyo-feeling-block.very-unpleasant {
-    background: linear-gradient(180deg, mix(#5856D6, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
-    color: mix(#5856D6, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#2B1A82, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
+    color: mix(#2B1A82, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.unpleasant {
-    background: linear-gradient(180deg, mix(#AF52DE, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
-    color: mix(#AF52DE, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#8944ab, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
+    color: mix(#8944ab, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.slightly-unpleasant {
-    background: linear-gradient(180deg, mix(#007AFF, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
-    color: mix(#007AFF, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#0277BA, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
+    color: mix(#0277BA, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.neutral {
     background: linear-gradient(180deg, mix(#40A0B9, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
     color: mix(#40A0B9, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.slightly-pleasant {
-    background: linear-gradient(180deg, mix(#309821, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
-    color: mix(#309821, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#309900, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
+    color: mix(#309900, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.pleasant {
-    background: linear-gradient(180deg, mix(#A89400, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
-    color: mix(#A89400, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#A29500, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
+    color: mix(#A29500, @surface_fg_color, 0.85);
 }
 .logyo-feeling-block.very-pleasant {
-    background: linear-gradient(180deg, mix(#FF9500, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
-    color: mix(#FF9500, @surface_fg_color, 0.85);
+    background: linear-gradient(180deg, mix(#FF7D13, @surface_bg_color, 0.7) 0%, @surface_container_bg_color 40%);
+    color: mix(#FF7D13, @surface_fg_color, 0.85);
 }
 
 .slider-caption {

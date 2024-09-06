@@ -5,14 +5,6 @@ public class Logyo.MoodGridView : Gtk.Box {
     private uint graph_height = 365;
     private bool show_all_daily_moods;
 
-    private const string COLOR_VERY_UNPLEASANT = "#5856D6";
-    private const string COLOR_UNPLEASANT = "#AF52DE";
-    private const string COLOR_SLIGHTLY_UNPLEASANT = "#007AFF";
-    private const string COLOR_NEUTRAL = "#40A0B9";
-    private const string COLOR_SLIGHTLY_PLEASANT = "#309821";
-    private const string COLOR_PLEASANT = "#A89400";
-    private const string COLOR_VERY_PLEASANT = "#FF9500";
-
     private Gtk.ToggleButton week_button;
     private Gtk.ToggleButton two_week_button;
     private Gtk.ToggleButton month_button;
@@ -317,14 +309,14 @@ public class Logyo.MoodGridView : Gtk.Box {
 
     private double[] get_color_for_mood (string feeling) {
         switch (get_mood_value (feeling)) {
-            case 1: return convert_hex_to_rgb (COLOR_VERY_UNPLEASANT);
-            case 2: return convert_hex_to_rgb (COLOR_UNPLEASANT);
-            case 3: return convert_hex_to_rgb (COLOR_SLIGHTLY_UNPLEASANT);
-            case 4: return convert_hex_to_rgb (COLOR_NEUTRAL);
-            case 5: return convert_hex_to_rgb (COLOR_SLIGHTLY_PLEASANT);
-            case 6: return convert_hex_to_rgb (COLOR_PLEASANT);
-            case 7: return convert_hex_to_rgb (COLOR_VERY_PLEASANT);
-            default: return convert_hex_to_rgb (COLOR_NEUTRAL);   // fallback to NEUTRAL
+            case 1: return convert_hex_to_rgb (ColorConstants.COLOR_VERY_UNPLEASANT);
+            case 2: return convert_hex_to_rgb (ColorConstants.COLOR_UNPLEASANT);
+            case 3: return convert_hex_to_rgb (ColorConstants.COLOR_SLIGHTLY_UNPLEASANT);
+            case 4: return convert_hex_to_rgb (ColorConstants.COLOR_NEUTRAL);
+            case 5: return convert_hex_to_rgb (ColorConstants.COLOR_SLIGHTLY_PLEASANT);
+            case 6: return convert_hex_to_rgb (ColorConstants.COLOR_PLEASANT);
+            case 7: return convert_hex_to_rgb (ColorConstants.COLOR_VERY_PLEASANT);
+            default: return convert_hex_to_rgb (ColorConstants.COLOR_NEUTRAL);   // fallback to NEUTRAL
         }
     }
 

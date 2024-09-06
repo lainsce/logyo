@@ -38,6 +38,7 @@ sources = [
 
     'Application.vala',
     'CalendarView.vala',
+    'ColorConstants.vala',
     'FileUtil.vala',
     'LogStruct.vala',
     'LogWidget.vala',

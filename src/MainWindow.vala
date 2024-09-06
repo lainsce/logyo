@@ -1,14 +1,5 @@
 [GtkTemplate (ui = "/io/github/lainsce/Logyo/mainwindow.ui")]
 public class Logyo.MainWindow : He.ApplicationWindow {
-    // Define color constants
-    private const string COLOR_VERY_UNPLEASANT = "#5856D6";
-    private const string COLOR_UNPLEASANT = "#AF52DE";
-    private const string COLOR_SLIGHTLY_UNPLEASANT = "#007AFF";
-    private const string COLOR_NEUTRAL = "#40A0B9";
-    private const string COLOR_SLIGHTLY_PLEASANT = "#309821";
-    private const string COLOR_PLEASANT = "#A89400";
-    private const string COLOR_VERY_PLEASANT = "#FF9500";
-
     private const GLib.ActionEntry APP_ENTRIES[] = {
         { "about", action_about },
     };
@@ -157,7 +148,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (COLOR_NEUTRAL);
+                update_color (ColorConstants.COLOR_NEUTRAL);
                 sheet.title = null;
                 navrail.visible = true;
                 emo_image.icon_name = "neutral-symbolic";
@@ -172,7 +163,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.back_button.set_visible (false);
                 sheet.remove_css_class ("logyo-feeling");
-                update_color (COLOR_NEUTRAL);
+                update_color (ColorConstants.COLOR_NEUTRAL);
                 emo_slider.scale.set_value (3); // Neutral
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
@@ -186,7 +177,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 sheet.back_button.set_visible (false);
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (COLOR_NEUTRAL);
+                update_color (ColorConstants.COLOR_NEUTRAL);
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
             }
@@ -198,7 +189,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("feeling");
                 sheet.back_button.set_visible (true);
                 sheet.add_css_class ("logyo-feeling");
-                update_color (COLOR_NEUTRAL);
+                update_color (ColorConstants.COLOR_NEUTRAL);
                 emo_slider.scale.set_value (3); // Neutral
                 if (timed_cb.active == true) {
                     sheet.title = _("Emotion");
@@ -254,7 +245,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (COLOR_NEUTRAL);
+                update_color (ColorConstants.COLOR_NEUTRAL);
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
                 description_entry.get_internal_entry ().text = "";
@@ -423,38 +414,38 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         switch (value) {
             case 0:
             // Very Unpleasant
-                update_color (COLOR_VERY_UNPLEASANT);
+                update_color (ColorConstants.COLOR_VERY_UNPLEASANT);
                 emo_image.icon_name = "very-unpleasant";
                 break;
             case 1:
             // Unpleasant
-                update_color (COLOR_UNPLEASANT);
+                update_color (ColorConstants.COLOR_UNPLEASANT);
                 emo_image.icon_name = "unpleasant";
                 break;
             case 2:
             // Slightly Unpleasant
-                update_color (COLOR_SLIGHTLY_UNPLEASANT);
+                update_color (ColorConstants.COLOR_SLIGHTLY_UNPLEASANT);
                 emo_image.icon_name = "slightly-unpleasant";
                 break;
             default:
             case 3:
             // Neutral
-                update_color (COLOR_NEUTRAL);
+                update_color (ColorConstants.COLOR_NEUTRAL);
                 emo_image.icon_name = "neutral";
                 break;
             case 4:
             // Slightly Pleasant
-                update_color (COLOR_SLIGHTLY_PLEASANT);
+                update_color (ColorConstants.COLOR_SLIGHTLY_PLEASANT);
                 emo_image.icon_name = "slightly-pleasant";
                 break;
             case 5:
             // Pleasant
-                update_color (COLOR_PLEASANT);
+                update_color (ColorConstants.COLOR_PLEASANT);
                 emo_image.icon_name = "pleasant";
                 break;
             case 6:
             // Very Pleasant
-                update_color (COLOR_VERY_PLEASANT);
+                update_color (ColorConstants.COLOR_VERY_PLEASANT);
                 emo_image.icon_name = "very-pleasant";
                 break;
         }
@@ -545,14 +536,14 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private string get_color_for_feeling (string feeling) {
         switch (feeling) {
-            case "very-unpleasant": return COLOR_VERY_UNPLEASANT;
-            case "unpleasant": return COLOR_UNPLEASANT;
-            case "slightly-unpleasant": return COLOR_SLIGHTLY_UNPLEASANT;
-            case "neutral": return COLOR_NEUTRAL;
-            case "slightly-pleasant": return COLOR_SLIGHTLY_PLEASANT;
-            case "pleasant": return COLOR_PLEASANT;
-            case "very-pleasant": return COLOR_VERY_UNPLEASANT;
-            default: return COLOR_NEUTRAL;
+            case "very-unpleasant": return ColorConstants.COLOR_VERY_UNPLEASANT;
+            case "unpleasant": return ColorConstants.COLOR_UNPLEASANT;
+            case "slightly-unpleasant": return ColorConstants.COLOR_SLIGHTLY_UNPLEASANT;
+            case "neutral": return ColorConstants.COLOR_NEUTRAL;
+            case "slightly-pleasant": return ColorConstants.COLOR_SLIGHTLY_PLEASANT;
+            case "pleasant": return ColorConstants.COLOR_PLEASANT;
+            case "very-pleasant": return ColorConstants.COLOR_VERY_UNPLEASANT;
+            default: return ColorConstants.COLOR_NEUTRAL;
         }
     }
 }
