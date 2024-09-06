@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema path="@APP_PATH@" id="@APP_ID@">
+    <key name="first-run" type="b">
+      <default>true</default>
+      <summary>First Run</summary>
+      <description>Whether this is the first run of the application</description>
+    </key>
   </schema>
 </schemalist>

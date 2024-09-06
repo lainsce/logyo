@@ -64,6 +64,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Image logged_pic;
 
+    [GtkChild]
+    private unowned He.Button begin_button;
+
+    private Settings settings;
+    private bool is_first_run;
+
     private He.Application app { get; set; }
 
     private List<LogWidget> logs = new List<LogWidget> ();
@@ -81,6 +87,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         );
 
         this.app = application;
+        settings = new Settings ("io.github.lainsce.Logyo");
+        is_first_run = settings.get_boolean ("first-run");
     }
 
     construct {
@@ -160,13 +168,27 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             }
         });
 
+        if (is_first_run) {
+            stack.visible_child_name = "first-run";
+            sheet.back_button.visible = false;
+        }
+
+        begin_button.clicked.connect (() => {
+            stack.visible_child_name = "timed";
+            sheet.back_button.visible = true;
+        });
+
         // Timed
         GLib.Timeout.add (60, () => {
             time_picker.time.add_minutes (1);
         });
 
         if (stack.get_visible_child_name () == "timed") {
-            sheet.back_button.set_visible (false);
+            if (is_first_run) {
+                sheet.back_button.set_visible (true);
+            } else {
+                sheet.back_button.set_visible (false);
+            }
         }
         sheet.back_button.clicked.connect (() => {
             if (stack.get_visible_child_name () == "feeling") {
@@ -184,18 +206,27 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             } else if (stack.get_visible_child_name () == "motivation") {
                 stack.set_visible_child_name ("description");
             } else if (stack.get_visible_child_name () == "timed") {
-                sheet.back_button.set_visible (false);
-                sheet.remove_css_class ("logyo-feeling");
-                sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (ColorConstants.get_color_for_mood(3));
-                sheet.title = null;
-                emo_image.icon_name = "neutral-symbolic";
+                if (is_first_run) {
+                    stack.set_visible_child_name ("first-run");
+                    sheet.back_button.visible = false;
+                } else {
+                    sheet.show_sheet = false;
+                    sheet.remove_css_class ("logyo-feeling");
+                    sheet.remove_css_class ("logyo-feeling-flat");
+                    update_color (ColorConstants.get_color_for_mood(3));
+                    sheet.title = null;
+                    emo_image.icon_name = "neutral-symbolic";
+                }
             }
         });
 
         // Time
         next_button_t.clicked.connect (() => {
             if (stack.get_visible_child_name () == "timed") {
+                if (is_first_run) {
+                    is_first_run = false;
+                    settings.set_boolean ("first-run", false);
+                }
                 stack.set_visible_child_name ("feeling");
                 sheet.back_button.set_visible (true);
                 sheet.add_css_class ("logyo-feeling");
@@ -417,6 +448,13 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private void on_add_clicked () {
         sheet.show_sheet = true;
         navrail.visible = false;
+        if (is_first_run) {
+            stack.set_visible_child_name ("first-run");
+            sheet.back_button.visible = false;
+        } else {
+            stack.set_visible_child_name ("timed");
+            sheet.back_button.visible = true;
+        }
     }
 
     private void on_slider_value_changed (Gtk.Scale slider, Gtk.Label label) {

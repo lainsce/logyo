@@ -35,6 +35,73 @@ template LogyoMainWindow : He.ApplicationWindow {
               margin-bottom: 12;
 
               Gtk.StackPage {
+                name: "first-run";
+                child: Gtk.Box {
+                  orientation: vertical;
+                  vexpand: true;
+                  spacing: 24;
+
+                  Gtk.Image {
+                    icon-name: "all-feelings";
+                    pixel-size: 128;
+                  }
+
+                  Gtk.Label {
+                    label: _("Support your Mental Wellbeing");
+                    styles ["view-subtitle"]
+                  }
+
+                  Gtk.Box {
+                    orientation: vertical;
+                    spacing: 12;
+                    halign: start;
+
+                    Gtk.Label {
+                      label: _("The Benefits of Logging");
+                      halign: start;
+                      styles ["cb-title"]
+                    }
+
+                    Gtk.Label {
+                      width-chars: 1;
+                      wrap: true;
+                      width-request: 275;
+                      halign: start;
+                      label: _("Regularly logging your emotions and moods can help you understand patterns in your mental wellbeing, identify triggers, and track your progress over time. This self-awareness can lead to better emotional regulation and improved overall mental health.");
+                    }
+                  }
+
+                  Gtk.Box {
+                    orientation: vertical;
+                    spacing: 12;
+                    halign: start;
+
+                    Gtk.Label {
+                      label: _("Emotions vs. Moods");
+                      halign: start;
+                      styles ["cb-title"]
+                    }
+
+                    Gtk.Label {
+                      width-chars: 1;
+                      wrap: true;
+                      width-request: 275;
+                      halign: start;
+                      label: _("Emotions are brief, intense feelings in response to specific stimuli, while moods are longer-lasting, less intense states that may not have a clear cause. Recognizing this difference can help you better understand and manage your mental state.");
+                    }
+                  }
+
+                  He.Button begin_button {
+                    label: _("Begin");
+                    is-pill: true;
+                    vexpand: true;
+                    valign: end;
+                    color: blue;
+                  }
+                };
+              }
+
+              Gtk.StackPage {
                 name: "timed";
                 child: Gtk.Box {
                   orientation: vertical;
