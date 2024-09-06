@@ -22,7 +22,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned He.EmptyPage empty_page;
     [GtkChild]
-    private unowned Gtk.ListBox feelings_list;
+    private unowned Gtk.FlowBox feelings_list;
     [GtkChild]
     private unowned He.BottomSheet sheet;
     [GtkChild]
@@ -89,8 +89,13 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     construct {
         var loaded_logs = Logyo.FileUtil.load_logs ("logs.json");
-        foreach (var log_widget in loaded_logs) {
+        var rev_loaded_logs = Logyo.FileUtil.load_logs ("logs.json");
+        rev_loaded_logs.reverse ();
+        foreach (var log_widget in rev_loaded_logs) {
             add_log_to_layout (log_widget);
+        }
+        foreach (var log_widget in loaded_logs) {
+            add_log_to_calendar_and_graph (log_widget);
         }
 
         calendar_view = new CalendarView (logs);
@@ -392,6 +397,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         log_widget.log_deleted.connect (() => { on_log_deleted (log_widget); });
         feelings_list.append (log_widget);
         logs.append (log_widget);
+    }
+    private void add_log_to_calendar_and_graph (LogWidget log_widget) {
         logs2.append (log_widget);
         logs3.append (log_widget);
         graph_view.redraw ();

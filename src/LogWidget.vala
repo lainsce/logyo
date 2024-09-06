@@ -1,6 +1,8 @@
-public class Logyo.LogWidget : Gtk.ListBoxRow {
-    private Gtk.Label title;
-    private Gtk.Label subtitle;
+public class Logyo.LogWidget : Gtk.FlowBoxChild {
+    private Gtk.Label timel;
+    private Gtk.Label descriptionl;
+    private Gtk.Label feelingl;
+    private Gtk.Label motivationl;
 
     // Common properties
     public string time { get; set; }
@@ -33,35 +35,50 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
         description = _log_struct.description;
 
         var icon = new Gtk.Image.from_icon_name (feeling_icon) {
-            halign = Gtk.Align.START
+            halign = Gtk.Align.CENTER
         };
-        icon.pixel_size = 48;
+        icon.pixel_size = 128;
 
-        title = new Gtk.Label ("");
-        title.set_xalign (0);
-        title.add_css_class ("cb-title");
+        timel = new Gtk.Label ("") {
+            halign = Gtk.Align.START,
+            hexpand = true
+        };
+        timel.add_css_class ("logyo-caption");
 
-        subtitle = new Gtk.Label ("");
-        subtitle.set_xalign (0);
-        title.add_css_class ("cb-subtitle");
+        feelingl = new Gtk.Label ("");
+        feelingl.add_css_class ("logyo-subtitle");
+
+        descriptionl = new Gtk.Label ("");
+        descriptionl.add_css_class ("logyo-title");
+
+        motivationl = new Gtk.Label ("");
+        motivationl.add_css_class ("logyo-caption");
 
         var delete_button = new He.Button ("user-trash-symbolic", "") {
-            valign = Gtk.Align.START
+            valign = Gtk.Align.START,
+            margin_end = -12,
+            margin_start = 12
         };
         delete_button.add_css_class ("circular");
         delete_button.clicked.connect (() => log_deleted ());
 
-        var label_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6) {
+        var label_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
             hexpand = true,
             valign = Gtk.Align.CENTER
         };
-        label_box.append (icon);
-        label_box.append (title);
-        label_box.append (subtitle);
+        label_box.append (timel);
+        label_box.append (delete_button);
 
-        var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        var desc_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+        desc_box.append (descriptionl);
+        desc_box.append (feelingl);
+        desc_box.append (motivationl);
+
+        var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 24);
         box.append (label_box);
         box.append (delete_button);
+        box.append (icon);
+        box.append (desc_box);
         add_css_class ("mini-content-block");
         add_css_class ("logyo-feeling-block");
 
@@ -88,8 +105,10 @@ public class Logyo.LogWidget : Gtk.ListBoxRow {
     }
 
     private void update_labels () {
-        title.label = "%s - %s".printf (_log_struct.feeling, _log_struct.time);
-        subtitle.label = "%s - %s".printf (_log_struct.description, _log_struct.motivation);
+        timel.label = "%s".printf (_log_struct.time);
+        descriptionl.label = "%s".printf (_log_struct.description);
+        feelingl.label = "%s".printf (_log_struct.feeling);
+        motivationl.label = "%s".printf (_log_struct.motivation);
     }
 
     private void update_styling (string feel) {

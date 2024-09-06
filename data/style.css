@@ -10,6 +10,10 @@
 .logyo-feeling .dialog-sheet {
     background: radial-gradient(circle at center, mix(@accent_bg_color, @surface_bg_color, 0.6), mix(@accent_bg_color, @surface_bg_color, 0.99));
 }
+.logyo-feeling .bottom-sheet .disclosure-button,
+.logyo-feeling .dialog-sheet .disclosure-button {
+    background: none;
+}
 .logyo-feeling-flat .bottom-sheet,
 .logyo-feeling-flat .dialog-sheet {
     background: linear-gradient(180deg, mix(@accent_bg_color, @surface_bg_color, 0.7), mix(@accent_bg_color, @surface_bg_color, 0.99));
@@ -17,6 +21,11 @@
 
 .logyo-feeling-block {
     color: @view_fg_color;
+    padding: 12px 24px 24px;
+    min-height: 305px;
+    min-width: 263px;
+    margin-right: 6px;
+    box-shadow: 0 2px 4px 0 @scrim;
 }
 .logyo-feeling-block button {
     background: none;
@@ -82,4 +91,19 @@
 }
 .day-empty {
     opacity: 0.32;
+}
+
+.logyo-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 22px;
+}
+.logyo-subtitle {
+    font-size: 14px;
+    line-height: 17px;
+}
+.logyo-caption {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 15px;
 }

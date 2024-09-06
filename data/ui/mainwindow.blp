@@ -32,6 +32,7 @@ template LogyoMainWindow : He.ApplicationWindow {
             sheet-stack: Gtk.Stack stack {
               width-request: 352;
               vexpand: true;
+              margin-bottom: 12;
 
               Gtk.StackPage {
                 name: "timed";
@@ -464,15 +465,22 @@ template LogyoMainWindow : He.ApplicationWindow {
                   Gtk.StackPage {
                     name: "list";
 
-                    child: Gtk.ScrolledWindow {
-                      hscrollbar-policy: never;
+                    child: Gtk.ScrolledWindow scrolled_window {
+                      vscrollbar-policy: never;
+                      hscrollbar-policy: always;
 
-                      Gtk.ListBox feelings_list {
-                        vexpand: true;
+                      Gtk.FlowBox feelings_list {
+                        vexpand-set: true;
+                        hexpand-set: true;
                         halign: center;
-                        margin-end: 18;
-                        margin-bottom: 18;
+                        valign: center;
+                        margin-top: 6;
                         margin-start: 18;
+                        margin-end: 10;
+                        margin-bottom: 6;
+                        orientation: vertical;
+                        max-children-per-line: 999;
+                        height-request: 400;
 
                         styles [
                           "content-list"
