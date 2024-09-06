@@ -226,9 +226,10 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 if (is_first_run) {
                     is_first_run = false;
                     settings.set_boolean ("first-run", false);
+                    sheet.back_button.set_visible (true);
                 }
                 stack.set_visible_child_name ("feeling");
-                sheet.back_button.set_visible (true);
+                sheet.back_button.set_visible (false);
                 sheet.add_css_class ("logyo-feeling");
                 update_color (ColorConstants.get_color_for_mood(3));
                 emo_slider.scale.set_value (3); // Neutral
@@ -453,7 +454,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             sheet.back_button.visible = false;
         } else {
             stack.set_visible_child_name ("timed");
-            sheet.back_button.visible = true;
+            sheet.back_button.visible = false;
         }
     }
 
