@@ -358,7 +358,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private bool on_close_request () {
         var res = Application.app.remove_this_window (this);
-        settings.set_boolean ("notifications-enabled", reminders_shown);
         return res;
     }
 
