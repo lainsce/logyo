@@ -72,9 +72,9 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned He.Button skip_button;
 
-    private Settings settings;
+    private static Settings settings;
     private bool is_first_run;
-    private bool reminders_shown = false;
+    private bool reminders_shown;
 
     private He.Application app { get; set; }
 
@@ -93,8 +93,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         );
 
         this.app = application;
-        settings = new Settings ("io.github.lainsce.Logyo");
         is_first_run = settings.get_boolean ("first-run");
+        reminders_shown = settings.get_boolean ("notifications-enabled");
+    }
+
+    static construct {
+        settings = new Settings ("io.github.lainsce.Logyo");
     }
 
     construct {
@@ -167,6 +171,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
                 sheet.remove_css_class ("logyo-feeling-flat");
+                logged_pic.remove_css_class("blurry-image");
+                logged_box.remove_css_class("label-overlay");
                 update_color (ColorConstants.get_color_for_mood(3));
                 sheet.title = null;
                 navrail.visible = true;
@@ -290,6 +296,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 sheet.back_button.set_visible (false);
                 sheet.title = null;
                 sheet.remove_css_class ("logyo-feeling");
+                sheet.remove_css_class ("logyo-feeling-flat");
 
                 logged_pic.add_css_class("blurry-image");
                 logged_box.add_css_class("label-overlay");
@@ -332,6 +339,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         sheet.show_sheet = false;
         stack.set_visible_child_name ("timed");
         sheet.remove_css_class ("logyo-feeling-flat");
+        logged_pic.remove_css_class("blurry-image");
+        logged_box.remove_css_class("label-overlay");
         update_color (ColorConstants.get_color_for_mood(3));
         emo_image.icon_name = "neutral-symbolic";
         description_entry.get_internal_entry ().text = "";
@@ -349,6 +358,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private bool on_close_request () {
         var res = Application.app.remove_this_window (this);
+        settings.set_boolean ("notifications-enabled", reminders_shown);
         return res;
     }
 
