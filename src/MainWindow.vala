@@ -59,6 +59,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned He.TextField motivation_entry;
 
+    [GtkChild]
+    private unowned Gtk.Box logged_box;
+    [GtkChild]
+    private unowned Gtk.Image logged_pic;
+
     private He.Application app { get; set; }
 
     private List<LogWidget> logs = new List<LogWidget> ();
@@ -236,37 +241,45 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             var datetime = new GLib.DateTime.now_local ();
 
             if (stack.get_visible_child_name () == "motivation") {
-                LogStruct log_struct = {
-                    all_day_cb.active ? datetime.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
-                    emo_label.get_label (),
-                    emo_image.get_icon_name (),
-                    description_entry.get_internal_entry ().text,
-                    motivation_entry.get_internal_entry ().text
-                };
-                var log_widget = new LogWidget (log_struct);
-                add_log_to_layout (log_widget);
-                add_log_to_calendar_and_graph (log_widget);
-                try {
-                    Logyo.FileUtil.save_logs (logs, "logs.json");
-                } catch (Error e) {
-                    warning ("Failed to save logs: %s", e.message);
-                }
-                sheet.show_sheet = false;
-                stack.set_visible_child_name ("timed");
-                sheet.remove_css_class ("logyo-feeling");
-                sheet.remove_css_class ("logyo-feeling-flat");
-                update_color (ColorConstants.get_color_for_mood(3));
+                stack.set_visible_child_name ("logged");
+                sheet.back_button.set_visible (false);
                 sheet.title = null;
-                emo_image.icon_name = "neutral-symbolic";
-                description_entry.get_internal_entry ().text = "";
-                motivation_entry.get_internal_entry ().text = "";
-                if (main_stack.visible_child_name == "empty") {
-                    main_stack.visible_child_name = "list";
-                }
-                if (all_day_cb.active) {
-                    calendar_view.update_calendar (current_month, current_year);
-                } else {
-                }
+                sheet.remove_css_class ("logyo-feeling");
+
+                logged_pic.add_css_class("blurry-image");
+                logged_box.add_css_class("label-overlay");
+
+                Timeout.add_seconds (6, () => {
+                    LogStruct log_struct = {
+                        all_day_cb.active ? datetime.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
+                        emo_label.get_label (),
+                        emo_image.get_icon_name (),
+                        description_entry.get_internal_entry ().text,
+                        motivation_entry.get_internal_entry ().text
+                    };
+                    var log_widget = new LogWidget (log_struct);
+                    add_log_to_layout (log_widget);
+                    add_log_to_calendar_and_graph (log_widget);
+                    try {
+                        Logyo.FileUtil.save_logs (logs, "logs.json");
+                    } catch (Error e) {
+                        warning ("Failed to save logs: %s", e.message);
+                    }
+                    sheet.show_sheet = false;
+                    stack.set_visible_child_name ("timed");
+                    sheet.remove_css_class ("logyo-feeling-flat");
+                    update_color (ColorConstants.get_color_for_mood(3));
+                    emo_image.icon_name = "neutral-symbolic";
+                    description_entry.get_internal_entry ().text = "";
+                    motivation_entry.get_internal_entry ().text = "";
+                    if (main_stack.visible_child_name == "empty") {
+                        main_stack.visible_child_name = "list";
+                    }
+                    if (all_day_cb.active) {
+                        calendar_view.update_calendar (current_month, current_year);
+                    }
+                    return false;
+                });
             }
         });
 

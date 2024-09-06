@@ -427,6 +427,41 @@ template LogyoMainWindow : He.ApplicationWindow {
                   }
                 };
               }
+              Gtk.StackPage {
+                name: "logged";
+                child: Gtk.Box {
+                  orientation: vertical;
+
+                  Gtk.Overlay {
+                    valign: center;
+                    vexpand: true;
+
+                    [overlay]
+                    Gtk.Box logged_box {
+                      spacing: 12;
+                      halign: center;
+                      hexpand: true;
+
+                      Gtk.Image {
+                        icon-name: "emblem-default-symbolic";
+                        pixel-size: 24;
+                      }
+                      Gtk.Label {
+                        label: _("Logged!");
+
+                        styles [
+                          "cb-title"
+                        ]
+                      }
+                    }
+
+                    Gtk.Image logged_pic {
+                      icon-name: bind d_emo_image.icon_name;
+                      pixel-size: 300;
+                    }
+                  }
+                };
+              }
             };
           }
 
