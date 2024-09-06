@@ -89,12 +89,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     construct {
         var loaded_logs = Logyo.FileUtil.load_logs ("logs.json");
-        var rev_loaded_logs = Logyo.FileUtil.load_logs ("logs.json");
-        rev_loaded_logs.reverse ();
-        foreach (var log_widget in rev_loaded_logs) {
-            add_log_to_layout (log_widget);
-        }
         foreach (var log_widget in loaded_logs) {
+            add_log_to_layout (log_widget);
             add_log_to_calendar_and_graph (log_widget);
         }
 
@@ -395,7 +391,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private void add_log_to_layout (LogWidget log_widget) {
         log_widget.log_deleted.connect (() => { on_log_deleted (log_widget); });
-        feelings_list.append (log_widget);
+        feelings_list.prepend (log_widget);
         logs.append (log_widget);
     }
     private void add_log_to_calendar_and_graph (LogWidget log_widget) {
