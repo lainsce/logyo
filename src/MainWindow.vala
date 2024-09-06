@@ -190,7 +190,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         });
 
         skip_button.clicked.connect (() => {
-            settings.set_boolean ("notifications-enabled", false);
             log_feeling ();
         });
 
@@ -296,7 +295,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 logged_box.add_css_class("label-overlay");
 
                 Timeout.add_seconds (6, () => {
-                    if (!reminders_shown) {
+                    if (!reminders_shown || !settings.get_boolean ("notifications-enabled")) {
                         stack.set_visible_child_name ("reminders");
                         reminders_shown = true;
                     } else {
