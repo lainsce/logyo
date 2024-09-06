@@ -529,6 +529,52 @@ template LogyoMainWindow : He.ApplicationWindow {
                   }
                 };
               }
+
+              Gtk.StackPage {
+                name: "reminders";
+                child: Gtk.Box {
+                  orientation: vertical;
+                  spacing: 24;
+                  valign: center;
+
+                  Gtk.Image {
+                    icon-name: "alarm-symbolic";
+                    pixel-size: 128;
+                  }
+
+                  Gtk.Label {
+                    label: _("Would you like to set reminders?");
+                    styles ["view-subtitle"]
+                  }
+
+                  Gtk.Label {
+                    label: _("Reminders can help you consistently log your emotions and moods.");
+                    wrap: true;
+                    width-chars: 40;
+                    justify: center;
+                    styles ["body"]
+                  }
+
+                  Gtk.Box {
+                    orientation: vertical;
+                    spacing: 12;
+                    margin-top: 24;
+                    vexpand: true;
+                    valign: end;
+
+                    He.Button notifications_button {
+                      label: _("Turn on Notifications");
+                      is-pill: true;
+                    }
+
+                    He.Button skip_button {
+                      label: _("Skip");
+                      is-pill: true;
+                      is-textual: true;
+                    }
+                  }
+                };
+              }
             };
           }
 

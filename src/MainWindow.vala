@@ -67,8 +67,14 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned He.Button begin_button;
 
+    [GtkChild]
+    private unowned He.Button notifications_button;
+    [GtkChild]
+    private unowned He.Button skip_button;
+
     private Settings settings;
     private bool is_first_run;
+    private bool reminders_shown = false;
 
     private He.Application app { get; set; }
 
@@ -178,6 +184,15 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             sheet.back_button.visible = true;
         });
 
+        notifications_button.clicked.connect (() => {
+            settings.set_boolean ("notifications-enabled", true);
+            log_feeling ();
+        });
+
+        skip_button.clicked.connect (() => {
+            log_feeling ();
+        });
+
         // Timed
         GLib.Timeout.add (60, () => {
             time_picker.time.add_minutes (1);
@@ -270,8 +285,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         // Motivation
         next_button_m.clicked.connect (() => {
-            var datetime = new GLib.DateTime.now_local ();
-
             if (stack.get_visible_child_name () == "motivation") {
                 stack.set_visible_child_name ("logged");
                 sheet.back_button.set_visible (false);
@@ -282,33 +295,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 logged_box.add_css_class("label-overlay");
 
                 Timeout.add_seconds (6, () => {
-                    LogStruct log_struct = {
-                        all_day_cb.active ? datetime.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
-                        emo_label.get_label (),
-                        emo_image.get_icon_name (),
-                        description_entry.get_internal_entry ().text,
-                        motivation_entry.get_internal_entry ().text
-                    };
-                    var log_widget = new LogWidget (log_struct);
-                    add_log_to_layout (log_widget);
-                    add_log_to_calendar_and_graph (log_widget);
-                    try {
-                        Logyo.FileUtil.save_logs (logs, "logs.json");
-                    } catch (Error e) {
-                        warning ("Failed to save logs: %s", e.message);
-                    }
-                    sheet.show_sheet = false;
-                    stack.set_visible_child_name ("timed");
-                    sheet.remove_css_class ("logyo-feeling-flat");
-                    update_color (ColorConstants.get_color_for_mood(3));
-                    emo_image.icon_name = "neutral-symbolic";
-                    description_entry.get_internal_entry ().text = "";
-                    motivation_entry.get_internal_entry ().text = "";
-                    if (main_stack.visible_child_name == "empty") {
-                        main_stack.visible_child_name = "list";
-                    }
-                    if (all_day_cb.active) {
-                        calendar_view.update_calendar (current_month, current_year);
+                    if (!reminders_shown) {
+                        stack.set_visible_child_name ("reminders");
+                        reminders_shown = true;
+                    } else {
+                        log_feeling ();
                     }
                     return false;
                 });
@@ -316,6 +307,44 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         });
 
         close_request.connect (() => on_close_request ());
+    }
+
+    private void log_feeling () {
+        var now = new GLib.DateTime.now_local ();
+        var current_month = now.get_month ();
+        var current_year = now.get_year ();
+    
+        LogStruct log_struct = {
+            all_day_cb.active ? now.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
+            emo_label.get_label (),
+            emo_image.get_icon_name (),
+            description_entry.get_internal_entry ().text,
+            motivation_entry.get_internal_entry ().text
+        };
+        var log_widget = new LogWidget (log_struct);
+        add_log_to_layout (log_widget);
+        add_log_to_calendar_and_graph (log_widget);
+        try {
+            Logyo.FileUtil.save_logs (logs, "logs.json");
+        } catch (Error e) {
+            warning ("Failed to save logs: %s", e.message);
+        }
+        sheet.show_sheet = false;
+        stack.set_visible_child_name ("timed");
+        sheet.remove_css_class ("logyo-feeling-flat");
+        update_color (ColorConstants.get_color_for_mood(3));
+        emo_image.icon_name = "neutral-symbolic";
+        description_entry.get_internal_entry ().text = "";
+        motivation_entry.get_internal_entry ().text = "";
+        if (main_stack.visible_child_name == "empty") {
+            main_stack.visible_child_name = "list";
+        }
+        if (all_day_cb.active) {
+            calendar_view.update_calendar (current_month, current_year);
+            graph_view.redraw ();
+        } else {
+            graph_view.redraw ();
+        }
     }
 
     private bool on_close_request () {

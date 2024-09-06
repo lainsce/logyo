@@ -6,5 +6,10 @@
       <summary>First Run</summary>
       <description>Whether this is the first run of the application</description>
     </key>
+    <key name="notifications-enabled" type="b">
+      <default>false</default>
+      <summary>Logging Notifications</summary>
+      <description>Whether to notify the user to log their entries</description>
+    </key>
   </schema>
 </schemalist>
