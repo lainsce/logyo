@@ -155,6 +155,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             }
         });
 
+        // Timed
+        GLib.Timeout.add (60, () => {
+            time_picker.time.add_minutes (1);
+        });
+
         if (stack.get_visible_child_name () == "timed") {
             sheet.back_button.set_visible (false);
         }
@@ -240,7 +245,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 };
                 var log_widget = new LogWidget (log_struct);
                 add_log_to_layout (log_widget);
-                Logyo.FileUtil.save_logs (logs, "logs.json");
+                add_log_to_calendar_and_graph (log_widget);
+                try {
+                    Logyo.FileUtil.save_logs (logs, "logs.json");
+                } catch (Error e) {
+                    warning ("Failed to save logs: %s", e.message);
+                }
                 sheet.show_sheet = false;
                 stack.set_visible_child_name ("timed");
                 sheet.remove_css_class ("logyo-feeling");
@@ -366,7 +376,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         try {
             FileUtils.set_contents (output_file, html_content);
         } catch (Error e) {
-            // w/e lol
+            warning ("Failed to write HTML chart: %s", e.message);
         }
     }
     private string join_labels (List<string> labels) {
@@ -398,69 +408,13 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private void on_slider_value_changed (Gtk.Scale slider, Gtk.Label label) {
         int value = (int) slider.get_value ();
-        string[] levels = {
-            _("Very Unpleasant"),
-            _("Unpleasant"),
-            _("Slightly Unpleasant"),
-            _("Neutral"),
-            _("Slightly Pleasant"),
-            _("Pleasant"),
-            _("Very Pleasant")
-        };
-
-        // Update the label text
-        label.set_text (levels[value]);
-
-        switch (value) {
-            case 0:
-            // Very Unpleasant
-                update_color (ColorConstants.COLOR_VERY_UNPLEASANT);
-                emo_image.icon_name = "very-unpleasant";
-                break;
-            case 1:
-            // Unpleasant
-                update_color (ColorConstants.COLOR_UNPLEASANT);
-                emo_image.icon_name = "unpleasant";
-                break;
-            case 2:
-            // Slightly Unpleasant
-                update_color (ColorConstants.COLOR_SLIGHTLY_UNPLEASANT);
-                emo_image.icon_name = "slightly-unpleasant";
-                break;
-            default:
-            case 3:
-            // Neutral
-                update_color (ColorConstants.COLOR_NEUTRAL);
-                emo_image.icon_name = "neutral";
-                break;
-            case 4:
-            // Slightly Pleasant
-                update_color (ColorConstants.COLOR_SLIGHTLY_PLEASANT);
-                emo_image.icon_name = "slightly-pleasant";
-                break;
-            case 5:
-            // Pleasant
-                update_color (ColorConstants.COLOR_PLEASANT);
-                emo_image.icon_name = "pleasant";
-                break;
-            case 6:
-            // Very Pleasant
-                update_color (ColorConstants.COLOR_VERY_PLEASANT);
-                emo_image.icon_name = "very-pleasant";
-                break;
-        }
+        label.set_text (get_mood_label(value));
+        update_color (ColorConstants.get_color_for_mood(value));
+        emo_image.icon_name = get_mood_icon(value);
     }
 
     private void update_color (string clr) {
-        Gdk.RGBA accent_color = { 0 };
-        accent_color.parse (clr);
-        app.default_accent_color = He.from_gdk_rgba (
-            {
-                accent_color.red * 255,
-                accent_color.green * 255,
-                accent_color.blue * 255
-            }
-        );
+        ColorConstants.update_color(app, clr);
     }
 
     private void on_log_deleted (LogWidget log) {
@@ -479,7 +433,11 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         dialog.primary_button.clicked.connect (() => {
             logs.remove (log);
-            Logyo.FileUtil.save_logs (logs, "logs.json");
+            try {
+                Logyo.FileUtil.save_logs (logs, "logs.json");
+            } catch (Error e) {
+                warning ("Failed to save logs: %s", e.message);
+            }
             feelings_list.remove (log);
 
             if (feelings_list.get_first_child () != null) {
@@ -531,6 +489,32 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             case "pleasant": return 6;
             case "very-pleasant": return 7;
             default: return 4;
+        }
+    }
+
+    private string get_mood_icon(int value) {
+        switch (value) {
+            case 0: return "very-unpleasant";
+            case 1: return "unpleasant";
+            case 2: return "slightly-unpleasant";
+            case 3: return "neutral";
+            case 4: return "slightly-pleasant";
+            case 5: return "pleasant";
+            case 6: return "very-pleasant";
+            default: return "neutral";
+        }
+    }
+
+    private string get_mood_label(int value) {
+        switch (value) {
+            case 0: return _("Very Unpleasant");
+            case 1: return _("Unpleasant");
+            case 2: return _("Slightly Unpleasant");
+            case 3: return _("Neutral");
+            case 4: return _("Slightly Pleasant");
+            case 5: return _("Pleasant");
+            case 6: return _("Very Pleasant");
+            default: return _("Neutral");
         }
     }
 

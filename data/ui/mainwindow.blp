@@ -38,7 +38,11 @@ template LogyoMainWindow : He.ApplicationWindow {
                 name: "timed";
                 child: Gtk.Box {
                   orientation: vertical;
-                  spacing: 24;
+
+                  Gtk.Image {
+                    icon-name: "all-feelings";
+                    pixel-size: 128;
+                  }
 
                   Gtk.Label {
                     label: _("Log an Emotion or Mood");
@@ -56,6 +60,7 @@ template LogyoMainWindow : He.ApplicationWindow {
                     vexpand: true;
                     orientation: vertical;
                     spacing: 12;
+                    margin-top: 32;
                     margin-bottom: 18;
 
                     Gtk.CheckButton timed_cb {
@@ -192,13 +197,12 @@ template LogyoMainWindow : He.ApplicationWindow {
                   Gtk.Box {
                     vexpand: true;
                     orientation: vertical;
-                    spacing: 12;
+                    margin-top: 18;
                     margin-bottom: 18;
 
                     Gtk.Image emo_image {
                       pixel-size: 300;
                       halign: center;
-                      margin-top: 24;
                       icon-name: "neutral-symbolic";
 
                       styles [

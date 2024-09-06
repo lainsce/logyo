@@ -136,10 +136,11 @@ public class Logyo.MoodGridView : Gtk.Box {
         cr.set_antialias (Cairo.Antialias.GRAY);
 
         double step_x = graph_width / days;
+        double step_y = graph_height / 6.0;
 
         // Draw faint grid lines and helpful text
         int[] y_values = { 0, 3, 6 };
-        string[] labels = { _("Very Unpleasant"), "", _("Very Pleasant") };
+        string[] labels = { get_mood_label(1), "", get_mood_label(7) };
 
         foreach (int y_value in y_values) {
             double y = graph_height - ((graph_height / 6.0) * y_value);
@@ -271,18 +272,7 @@ public class Logyo.MoodGridView : Gtk.Box {
     }
 
     private int get_day_index (LogWidget log) {
-        string date_part;
-
-        // Check if the format includes time
-        if (log.time.contains ("@")) {
-            // Split at "@" and use the second part which contains the date
-            date_part = log.time.split ("@")[1].strip ();
-        } else {
-            // If there's no "@", the entire log.time is the date part
-            date_part = log.time;
-        }
-
-        // Split the date into day and month components
+        string date_part = get_date_part(log.time);
         string[] date_components = date_part.split ("/");
 
         if (date_components.length != 2) {
@@ -290,58 +280,35 @@ public class Logyo.MoodGridView : Gtk.Box {
             return -1;
         }
 
-        int day = int.parse (date_components[0]);
-        return day;
+        return int.parse (date_components[0]);
+    }
+
+    private string get_mood_label (int mood_value) {
+        switch (mood_value) {
+            case 1: return _("Very Unpleasant");
+            case 2: return _("Unpleasant");
+            case 3: return _("Slightly Unpleasant");
+            case 4: return _("Neutral");
+            case 5: return _("Slightly Pleasant");
+            case 6: return _("Pleasant");
+            case 7: return _("Very Pleasant");
+            default: return _("Unknown");
+        }
     }
 
     private int get_mood_value (string feeling) {
-        switch (feeling) {
-            case "very-unpleasant": return 1;
-            case "unpleasant": return 2;
-            case "slightly-unpleasant": return 3;
-            case "neutral": return 4;
-            case "slightly-pleasant": return 5;
-            case "pleasant": return 6;
-            case "very-pleasant": return 7;
-            default: return 4;
+        return ColorConstants.get_mood_value(feeling);
+    }
+
+    private string get_date_part(string time_string) {
+        if (time_string.contains ("@")) {
+            return time_string.split ("@")[1].strip ();
         }
+        return time_string;
     }
 
     private double[] get_color_for_mood (string feeling) {
-        switch (get_mood_value (feeling)) {
-            case 1: return convert_hex_to_rgb (ColorConstants.COLOR_VERY_UNPLEASANT);
-            case 2: return convert_hex_to_rgb (ColorConstants.COLOR_UNPLEASANT);
-            case 3: return convert_hex_to_rgb (ColorConstants.COLOR_SLIGHTLY_UNPLEASANT);
-            case 4: return convert_hex_to_rgb (ColorConstants.COLOR_NEUTRAL);
-            case 5: return convert_hex_to_rgb (ColorConstants.COLOR_SLIGHTLY_PLEASANT);
-            case 6: return convert_hex_to_rgb (ColorConstants.COLOR_PLEASANT);
-            case 7: return convert_hex_to_rgb (ColorConstants.COLOR_VERY_PLEASANT);
-            default: return convert_hex_to_rgb (ColorConstants.COLOR_NEUTRAL);   // fallback to NEUTRAL
-        }
-    }
-
-    private double[] convert_hex_to_rgb (string hexcode) {
-        print ("HEX: %s\n", hexcode);
-
-        // 000000
-        // 012345
-        // R: 0 to 1
-        // G: 2 to 3
-        // B: 4 to 5
-        string hex = hexcode.replace("#", "");
-        int length = 2;
-        uint red = uint.parse (hex.substring(0, length), 16);
-        uint green = uint.parse (hex.substring(2, length), 16);
-        uint blue = uint.parse (hex.substring(4, length), 16);
-
-        double[] rgb = {
-            (double)red / 255,
-            (double)green / 255,
-            (double)blue / 255
-        };
-
-        print ("RGB: %0.4f, %0.4f, %0.4f\n", rgb[0], rgb[1], rgb[2]);
-
-        return rgb;
+        string color_hex = ColorConstants.get_color_for_mood(ColorConstants.get_mood_value(feeling) - 1);
+        return ColorConstants.convert_hex_to_rgb(color_hex);
     }
 }

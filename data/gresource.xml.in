@@ -14,6 +14,7 @@
     <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/graph-filled-symbolic.svg">icons/graph-filled-symbolic.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/no-entry-symbolic.svg">icons/no-entry-symbolic.svg</file>
 
+    <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/all-feelings.svg">icons/all-feelings.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/very-unpleasant.svg">icons/very-unpleasant.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/unpleasant.svg">icons/unpleasant.svg</file>
     <file compressed="true" preprocess="xml-stripblanks" alias="scalable/actions/slightly-unpleasant.svg">icons/slightly-unpleasant.svg</file>

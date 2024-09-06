@@ -35,7 +35,7 @@ namespace Logyo.FileUtil {
             warning ("Failed to save log: %s", e.message);
         }
     }
-    public void save_logs (List<LogWidget> log_widgets, string filename) {
+    public void save_logs (List<LogWidget> log_widgets, string filename) throws Error {
         var path = get_logyo_directory () + filename;
         try {
             var json_builder = new Json.Builder ();
