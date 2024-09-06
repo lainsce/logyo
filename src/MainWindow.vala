@@ -190,6 +190,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         });
 
         skip_button.clicked.connect (() => {
+            settings.set_boolean ("notifications-enabled", false);
             log_feeling ();
         });
 
@@ -313,7 +314,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         var now = new GLib.DateTime.now_local ();
         var current_month = now.get_month ();
         var current_year = now.get_year ();
-    
+
         LogStruct log_struct = {
             all_day_cb.active ? now.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
             emo_label.get_label (),

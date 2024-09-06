@@ -534,16 +534,16 @@ template LogyoMainWindow : He.ApplicationWindow {
                 name: "reminders";
                 child: Gtk.Box {
                   orientation: vertical;
+                  vexpand: true;
                   spacing: 24;
-                  valign: center;
 
                   Gtk.Image {
-                    icon-name: "alarm-symbolic";
+                    icon-name: "notification-symbolic";
                     pixel-size: 128;
                   }
 
                   Gtk.Label {
-                    label: _("Would you like reminders to log?");
+                    label: _("Would you like notifications to log?");
                     styles ["view-subtitle"]
                   }
 
