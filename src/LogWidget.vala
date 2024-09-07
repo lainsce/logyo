@@ -107,16 +107,21 @@ public class Logyo.LogWidget : Gtk.FlowBoxChild {
     private void update_labels () {
         timel.label = "%s".printf (_log_struct.time);
         descriptionl.label = "%s".printf (_log_struct.description);
-        feelingl.label = "%s".printf (
-            _log_struct.time.contains ("@") ?
-                _log_struct.feeling[0] == 'U' ?
-                    "An" :
-                    "A"
-            + " " + _log_struct.feeling + " " + "Time" :
-            _log_struct.feeling[0] == 'U' ?
-                    "An" :
-                    "A"
-            + " " + _log_struct.feeling + " " + "Day");
+
+        if (_log_struct.time.contains ("@")) {
+            if (_log_struct.feeling[0] == 'U') {
+                feelingl.label = "%s".printf (_("An") + " " + _log_struct.feeling + " " + _("Day"));
+            } else {
+                feelingl.label = "%s".printf (_("A") + " " + _log_struct.feeling + " " + _("Day"));
+            }
+        } else {
+            if (_log_struct.feeling[0] == 'U') {
+                feelingl.label = "%s".printf (_("An") + " " + _log_struct.feeling + " " + _("Time"));
+            } else {
+                feelingl.label = "%s".printf (_("A") + " " + _log_struct.feeling + " " + _("Time"));
+            }
+        }
+
         motivationl.label = "%s".printf (_log_struct.motivation);
     }
 
