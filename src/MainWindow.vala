@@ -532,7 +532,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         foreach (var log in plogs) {
             labels.append ("\"%s\"".printf (log.time));
-            data.append ((map_feeling_to_number (log.feeling_icon) + 1).to_string ());
+            data.append ((map_feeling_to_number (log.feeling_icon)).to_string ());
             point_colors.append ("\"%s\"".printf (get_color_for_feeling (log.feeling_icon)));
         }
 
