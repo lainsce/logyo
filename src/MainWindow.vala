@@ -165,6 +165,18 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             show_export_dialog (logs3);
         });
 
+        var scroll_controller = new Gtk.EventControllerScroll (Gtk.EventControllerScrollFlags.BOTH_AXES);
+        scroll_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
+
+        scroll_controller.scroll.connect((dx, dy) => {
+            var hadjustment = scrolled_window.get_hadjustment();
+            hadjustment.value += dy * hadjustment.step_increment; // Scroll horizontally using dy
+
+            return true;
+        });
+
+        scrolled_window.add_controller(scroll_controller);
+
         add_button.clicked.connect (on_add_clicked);
 
         sheet.notify["show-sheet"].connect (() => {
