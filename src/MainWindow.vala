@@ -54,12 +54,14 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     [GtkChild]
     private unowned He.Button next_button_d;
     [GtkChild]
-    private unowned He.TextField description_entry;
+    private unowned Gtk.Box description_box;
 
     [GtkChild]
     private unowned He.Button next_button_m;
     [GtkChild]
-    private unowned He.TextField motivation_entry;
+    private unowned Gtk.Label m_emo_desc;
+    [GtkChild]
+    private unowned Gtk.Box motivation_box;
 
     [GtkChild]
     private unowned Gtk.Box logged_box;
@@ -86,6 +88,9 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private CalendarView calendar_view;
     private MoodGridView graph_view;
+
+    private ChipGroup description_group;
+    private ChipGroup motivation_group;
 
     public MainWindow (He.Application application) {
         Object (
@@ -177,6 +182,16 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         scrolled_window.add_controller(scroll_controller);
 
+        description_group = new ChipGroup (FeelingConstants.descriptions);
+        description_box.append (description_group);
+
+        motivation_group = new ChipGroup (FeelingConstants.motivations);
+        motivation_box.append (motivation_group);
+
+        description_group.selection_changed.connect(() => {
+            make_label (m_emo_desc, description_group.selected_values);
+        });
+
         add_button.clicked.connect (on_add_clicked);
 
         sheet.notify["show-sheet"].connect (() => {
@@ -264,7 +279,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                     sheet.back_button.set_visible (true);
                 }
                 stack.set_visible_child_name ("feeling");
-                sheet.back_button.set_visible (false);
+                sheet.back_button.set_visible (true);
                 sheet.add_css_class ("logyo-feeling");
                 update_color (ColorConstants.get_color_for_mood(3));
                 emo_slider.scale.set_value (3); // Neutral
@@ -330,6 +345,23 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         close_request.connect (() => on_close_request ());
     }
 
+    private void make_label (Gtk.Label label, List<string> list) {
+        string[] values_array = new string[list.length ()];
+        int i = 0;
+        foreach (var value in list) {
+            values_array[i++] = value;
+        }
+        label.label = string.joinv(", ", values_array);
+    }
+    private string make_selection_string (List<string> list) {
+        string[] values_array = new string[list.length ()];
+        int i = 0;
+        foreach (var value in list) {
+            values_array[i++] = value;
+        }
+        return string.joinv(", ", values_array);
+    }
+
     private void log_feeling () {
         var now = new GLib.DateTime.now_local ();
         var current_month = now.get_month ();
@@ -339,8 +371,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             all_day_cb.active ? now.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
             emo_label.get_label (),
             emo_image.get_icon_name (),
-            description_entry.get_internal_entry ().text,
-            motivation_entry.get_internal_entry ().text
+            make_selection_string (motivation_group.selected_values),
+            m_emo_desc.label
         };
         var log_widget = new LogWidget (log_struct);
         add_log_to_layout (log_widget);
@@ -357,8 +389,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         logged_box.remove_css_class("label-overlay");
         update_color (ColorConstants.get_color_for_mood(3));
         emo_image.icon_name = "neutral-symbolic";
-        description_entry.get_internal_entry ().text = "";
-        motivation_entry.get_internal_entry ().text = "";
+        description_group.reset_selections ();
+        motivation_group.reset_selections ();
         if (main_stack.visible_child_name == "empty") {
             main_stack.visible_child_name = "list";
         }

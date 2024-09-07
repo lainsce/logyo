@@ -384,18 +384,14 @@ template LogyoMainWindow : He.ApplicationWindow {
 
                   He.Divider {}
 
-                  Gtk.Box {
-                    vexpand: true;
-                    orientation: vertical;
-                    spacing: 12;
-                    margin-bottom: 18;
-
-                    He.TextField description_entry {
+                  Gtk.ScrolledWindow {
+                    hscrollbar-policy: never;
+                    Gtk.Box description_box {
                       vexpand: true;
-                      valign: center;
-                      is-outline: true;
-                      placeholder-text: _("Description");
-                      support-text: _("Example: Amazed, Peaceful, Sad…");
+                      halign: center;
+                      orientation: vertical;
+                      spacing: 12;
+                      margin-bottom: 18;
                     }
                   }
 
@@ -435,7 +431,6 @@ template LogyoMainWindow : He.ApplicationWindow {
                   }
 
                   Gtk.Label m_emo_desc {
-                    label: bind description_entry.entry.text;
                     width-chars: 1;
                     halign: center;
                     justify: center;
@@ -473,18 +468,14 @@ template LogyoMainWindow : He.ApplicationWindow {
 
                   He.Divider {}
 
-                  Gtk.Box {
-                    vexpand: true;
-                    orientation: vertical;
-                    spacing: 12;
-                    margin-bottom: 18;
-
-                    He.TextField motivation_entry {
+                  Gtk.ScrolledWindow {
+                    hscrollbar-policy: never;
+                    Gtk.Box motivation_box {
                       vexpand: true;
                       valign: center;
-                      is-outline: true;
-                      placeholder-text: _("Motivation");
-                      support-text: _("Example: Tasks, Family, Work…");
+                      orientation: vertical;
+                      spacing: 12;
+                      margin-bottom: 18;
                     }
                   }
 
