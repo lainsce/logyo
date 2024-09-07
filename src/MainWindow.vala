@@ -62,6 +62,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private unowned Gtk.Label m_emo_desc;
     [GtkChild]
     private unowned Gtk.Box motivation_box;
+    [GtkChild]
+    private unowned He.TextField motivation_text;
 
     [GtkChild]
     private unowned Gtk.Box logged_box;
@@ -79,6 +81,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private static Settings settings;
     private bool is_first_run;
     private bool reminders_shown;
+    private bool has_motivation_selection = false;
 
     private He.Application app { get; set; }
 
@@ -187,6 +190,16 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         motivation_group = new ChipGroup (FeelingConstants.motivations);
         motivation_box.append (motivation_group);
+
+        motivation_group.selection_changed.connect(() => {
+            has_motivation_selection = (motivation_group.selected_values != null && motivation_group.selected_values.length() > 0);
+            motivation_text.visible = has_motivation_selection;
+        });
+
+        motivation_group.all_selections_cleared.connect(() => {
+            has_motivation_selection = false;
+            motivation_text.visible = false;
+        });
 
         description_group.selection_changed.connect(() => {
             make_label (m_emo_desc, description_group.selected_values);
@@ -367,12 +380,19 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         var current_month = now.get_month ();
         var current_year = now.get_year ();
 
+        string motivation_value = motivation_text.get_internal_entry ().text;
+        if (motivation_value == "" && has_motivation_selection) {
+            motivation_value = make_selection_string (motivation_group.selected_values);
+        }
+        has_motivation_selection = false;
+        motivation_text.visible = false;
+
         LogStruct log_struct = {
             all_day_cb.active ? now.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
             emo_label.get_label (),
             emo_image.get_icon_name (),
             m_emo_desc.label,
-            make_selection_string (motivation_group.selected_values)
+            motivation_value
         };
         var log_widget = new LogWidget (log_struct);
         add_log_to_layout (log_widget);

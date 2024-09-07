@@ -1,12 +1,13 @@
 public class ChipGroup : He.Bin {
-    private GLib.List<Gtk.ToggleButton>? buttons = null;
-    public GLib.List<string>? selected_values = null;
+    private GLib.List<Gtk.ToggleButton> buttons = new GLib.List<Gtk.ToggleButton> ();
+    public GLib.List<string> selected_values = new GLib.List<string> ();
 
     private Gtk.FlowBox fb;
 
     public signal void selection_changed ();
+    public signal void all_selections_cleared ();
 
-    public ChipGroup (string[] options) {
+    public ChipGroup(string[] options) {
         fb = new Gtk.FlowBox ();
 
         foreach (string option in options) {
@@ -27,18 +28,19 @@ public class ChipGroup : He.Bin {
     }
 
     public void reset_selections () {
-        if (selected_values != null) {
-            foreach (var button in buttons) {
-                if (button.active) {
-                    button.active = false;
-                }
+        foreach (var button in buttons) {
+            if (button.active) {
+                button.active = false;
             }
-            selected_values = null; // Clear the list by setting it to null
-            selection_changed ();
         }
+        while (selected_values.length() > 0) {
+            selected_values.remove(selected_values.first().data);
+        }
+        selection_changed ();
+        all_selections_cleared ();
     }
 
-    public void add_button (string label) {
+    public void add_button(string label) {
         if (label == "") {
             return; // Skip invalid input early
         }
@@ -66,6 +68,9 @@ public class ChipGroup : He.Bin {
             } else {
                 icon.hide ();
                 selected_values.remove (label);
+                if (selected_values.length () == 0) {
+                    all_selections_cleared ();
+                }
             }
             selection_changed ();
         });
@@ -76,32 +81,30 @@ public class ChipGroup : He.Bin {
     }
 
     public void remove_button (Gtk.ToggleButton button) {
-        if (buttons != null) {
-            buttons.remove (button); // Remove from the list
-            fb.remove (button);
-            if (button.active && selected_values != null) {
-                var hbox = (Gtk.Box) button.child;
-                var label = (Gtk.Label) hbox.get_first_child ().get_next_sibling ();
-                selected_values.remove (label.label); // Maintain selected_values consistency
-            }
-            selection_changed ();
+        buttons.remove (button); // Remove from the list
+        fb.remove (button);
+        if (button.active) {
+            var hbox = (Gtk.Box) button.child;
+            var label = (Gtk.Label) hbox.get_first_child ().get_next_sibling ();
+            selected_values.remove (label.label); // Maintain selected_values consistency
         }
+        selection_changed ();
     }
 
-    public void set_button_style (string style_class) {
+    public void set_button_style(string style_class) {
         foreach (var button in buttons) {
             button.add_css_class (style_class);
         }
     }
 
     public new void select_all () {
-        if (buttons != null && (selected_values == null || selected_values.length () < buttons.length ())) {
+        if (selected_values.length() < buttons.length()) {
             foreach (var button in buttons) {
                 if (!button.active) {
                     button.active = true;
                     var hbox = (Gtk.Box) button.child;
                     var icon = (Gtk.Image) hbox.get_first_child ();
-                    icon.show ();
+                    icon.show();
                     var label = (Gtk.Label) icon.get_next_sibling ();
                     selected_values.prepend (label.label); // Avoid unnecessary updates
                 }
@@ -110,59 +113,54 @@ public class ChipGroup : He.Bin {
         }
     }
 
-    public void deselect_all () {
-        if (selected_values != null) {
-            foreach (var button in buttons) {
-                if (button.active) {
-                    button.active = false;
-                    var hbox = (Gtk.Box) button.child;
-                    var icon = (Gtk.Image) hbox.get_first_child ();
-                    icon.hide ();
-                }
+    public void deselect_all() {
+        foreach (var button in buttons) {
+            if (button.active) {
+                button.active = false;
+                var hbox = (Gtk.Box) button.child;
+                var icon = (Gtk.Image) hbox.get_first_child ();
+                icon.hide ();
             }
-            selected_values = null; // Clear the list by setting it to null
-            selection_changed ();
         }
+        while (selected_values.length() > 0) {
+            selected_values.remove(selected_values.first().data);
+        }
+        selection_changed ();
+        all_selections_cleared ();
     }
 
     public void toggle_selection (Gtk.ToggleButton button) {
-        if (buttons != null) {
-            button.active = !button.active;
-            var hbox = (Gtk.Box) button.child;
-            var icon = (Gtk.Image) hbox.get_first_child ();
-            var label = (Gtk.Label) icon.get_next_sibling ();
-            if (button.active) {
-                icon.show ();
-                selected_values.prepend (label.label);
-            } else {
-                icon.hide ();
-                selected_values.remove (label.label);
-            }
-            selection_changed ();
+        button.active = !button.active;
+        var hbox = (Gtk.Box) button.child;
+        var icon = (Gtk.Image) hbox.get_first_child ();
+        var label = (Gtk.Label) icon.get_next_sibling ();
+        if (button.active) {
+            icon.show ();
+            selected_values.prepend (label.label);
+        } else {
+            icon.hide ();
+            selected_values.remove (label.label);
         }
+        selection_changed ();
     }
 
     public bool is_selected (string label) {
-        if (buttons != null) {
-            foreach (var button in buttons) {
-                var hbox = (Gtk.Box) button.child;
-                var label_widget = (Gtk.Label) hbox.get_first_child ().get_next_sibling ();
-                if (label_widget.label == label) {
-                    return button.active;
-                }
+        foreach (var button in buttons) {
+            var hbox = (Gtk.Box) button.child;
+            var label_widget = (Gtk.Label) hbox.get_first_child ().get_next_sibling ();
+            if (label_widget.label == label) {
+                return button.active;
             }
         }
         return false;
     }
 
     public Gtk.ToggleButton? find_button_by_label (string label) {
-        if (buttons != null) {
-            foreach (var button in buttons) {
-                var hbox = (Gtk.Box) button.child;
-                var label_widget = (Gtk.Label) hbox.get_first_child ().get_next_sibling ();
-                if (label_widget.label == label) {
-                    return button;
-                }
+        foreach (var button in buttons) {
+            var hbox = (Gtk.Box) button.child;
+            var label_widget = (Gtk.Label) hbox.get_first_child ().get_next_sibling ();
+            if (label_widget.label == label) {
+                return button;
             }
         }
         return null;

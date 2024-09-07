@@ -479,6 +479,13 @@ template LogyoMainWindow : He.ApplicationWindow {
                     }
                   }
 
+                  He.TextField motivation_text {
+                    placeholder-text: _("Optional description…");
+                    margin-top: 12;
+                    margin-bottom: 12;
+                    visible: false;
+                  }
+
                   He.Button next_button_m {
                     is-pill: true;
                     label: _("Log Feeling");
