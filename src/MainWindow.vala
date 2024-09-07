@@ -504,14 +504,13 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                                             'Neutral',
                                             'Slightly Pleasant',
                                             'Pleasant',
-                                            'Very Pleasant',
-                                            ''
+                                            'Very Pleasant'
                                         ];
                                         return '' + values[val];
                                     },
                                 },
-                                min: 0,
-                                max: 8
+                                min: 1,
+                                max: 7
                             }
                         }
                     },
@@ -533,7 +532,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         foreach (var log in plogs) {
             labels.append ("\"%s\"".printf (log.time));
-            data.append ((map_feeling_to_number (log.feeling_icon)).to_string ());
+            data.append ((map_feeling_to_number (log.feeling_icon) + 1).to_string ());
             point_colors.append ("\"%s\"".printf (get_color_for_feeling (log.feeling_icon)));
         }
 
@@ -657,19 +656,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         ).present ();
     }
 
-    private int map_feeling_to_number (string feeling) {
-        switch (feeling) {
-            case "very-unpleasant": return 1;
-            case "unpleasant": return 2;
-            case "slightly-unpleasant": return 3;
-            case "neutral": return 4;
-            case "slightly-pleasant": return 5;
-            case "pleasant": return 6;
-            case "very-pleasant": return 7;
-            default: return 4;
-        }
-    }
-
     private string get_mood_icon(int value) {
         switch (value) {
             case 0: return "very-unpleasant";
@@ -693,6 +679,19 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             case 5: return _("Pleasant");
             case 6: return _("Very Pleasant");
             default: return _("Neutral");
+        }
+    }
+
+    private int map_feeling_to_number (string feeling) {
+        switch (feeling) {
+            case "very-unpleasant": return 0;
+            case "unpleasant": return 1;
+            case "slightly-unpleasant": return 2;
+            case "neutral": return 3;
+            case "slightly-pleasant": return 4;
+            case "pleasant": return 5;
+            case "very-pleasant": return 6;
+            default: return 3;
         }
     }
 

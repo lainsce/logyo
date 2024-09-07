@@ -307,7 +307,7 @@ public class Logyo.MoodGridView : Gtk.Box {
     }
 
     private double[] get_color_for_mood (string feeling) {
-        string color_hex = ColorConstants.get_color_for_mood(ColorConstants.get_mood_value(feeling) - 1);
+        string color_hex = ColorConstants.get_color_for_mood(ColorConstants.get_mood_value(feeling));
         return ColorConstants.convert_hex_to_rgb(color_hex);
     }
 }

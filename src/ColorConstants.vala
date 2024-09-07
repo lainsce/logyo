@@ -10,6 +10,7 @@ public class Logyo.ColorConstants {
     }
 
     private const string[] MOOD_COLORS = {
+        "",
         "#5856D6", // VERY_UNPLEASANT
         "#AF52DE", // UNPLEASANT
         "#007AFF", // SLIGHTLY_UNPLEASANT
