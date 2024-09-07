@@ -28,6 +28,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private unowned He.Bin graph;
     [GtkChild]
     private unowned He.NavigationRail navrail;
+    [GtkChild]
+    private unowned Gtk.ScrolledWindow scrolled_window;
 
     [GtkChild]
     private unowned He.Button next_button_t;
