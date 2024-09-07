@@ -46,6 +46,7 @@ sources = [
     'LogWidget.vala',
     'MainWindow.vala',
     'MoodGridView.vala',
+    'PreferencesWindow.vala',
 ]
 
 dependencies = [

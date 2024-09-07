@@ -21,7 +21,7 @@ public class ChipGroup : He.Bin {
         }
 
         fb.homogeneous = false;
-        fb.max_children_per_line = 0;
+        fb.max_children_per_line = 3;
         fb.min_children_per_line = 3;
         fb.row_spacing = 6;
         fb.column_spacing = 12;

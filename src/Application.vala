@@ -50,6 +50,10 @@ public class Logyo.Application : He.Application {
         } catch (Error e) {
             error ("Failed to connect to session bus: %s", e.message);
         }
+        var settings = new Settings ("io.github.lainsce.Logyo");
+        if (settings.get_boolean ("notifications-enabled")) {
+            schedule_notifications ();
+        }
     }
 
     public static int main (string[] args) {
@@ -141,27 +145,40 @@ public class Logyo.Application : He.Application {
         base.startup ();
 
         add_action_entries (APP_ENTRIES, this);
-
-        schedule_notifications ();
     }
 
     private void schedule_notifications () {
+        var settings = new Settings ("io.github.lainsce.Logyo");
         var now = new DateTime.now_local ();
 
-        // Set midday notification
-        var midday = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), 12, 0, 0);
-        if (now.compare (midday) > 0) {
-            midday = midday.add_days (1);
-        }
+        if (settings.get_boolean ("midday-notification")) {
+            var midday_time = settings.get_string ("midday-time");
+            string[] time_parts = midday_time.split(":");
 
-        // Set evening notification
-        var evening = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), 18, 0, 0);
-        if (now.compare (evening) > 0) {
-            evening = evening.add_days (1);
-        }
+            int hours = 12;
+            int minutes = 0;
 
-        schedule_notification (_("Midday Check-in"), _("How are you feeling today?"), midday);
-        schedule_notification (_("Evening Reflection"), _("Take a moment to reflect on your day."), evening);
+            if (time_parts.length >= 2) {
+                if (int.try_parse(time_parts[0], out hours) == false) {
+                    hours = 12;
+                }
+                if (int.try_parse(time_parts[1], out minutes) == false) {
+                    minutes = 0;
+                }
+            }
+            var midday = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), hours, minutes, 0);
+            if (now.compare (midday) > 0) {
+                midday = midday.add_days (1);
+            }
+            schedule_notification (_("Midday Check-in"), _("How are you feeling today?"), midday);
+        }
+        if (settings.get_boolean ("evening-notification")) {
+            var evening = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), 18, 0, 0);
+            if (now.compare (evening) > 0) {
+                evening = evening.add_days (1);
+            }
+            schedule_notification (_("Evening Reflection"), _("Take a moment to reflect on your day."), evening);
+        }
     }
 
     private void schedule_notification (string title, string body, DateTime time) {
@@ -173,19 +190,7 @@ public class Logyo.Application : He.Application {
 
         GLib.Timeout.add_seconds (seconds_until_notification, () => {
             base.send_notification (null, notification);
-            schedule_next_notification (title, body, time.add_days (1));
             return false; // Do not repeat
-        });
-    }
-
-    private void schedule_next_notification (string title, string body, DateTime next_time) {
-        // Schedule the next notification for tomorrow
-        GLib.Timeout.add_seconds ((uint) (next_time.difference (new DateTime.now_local ()) / TimeSpan.SECOND), () => {
-            var notification = new Notification (title);
-            notification.set_body (body);
-            base.send_notification (null, notification);
-            schedule_next_notification (title, body, next_time.add_days (1));
-            return false;
         });
     }
 

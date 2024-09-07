@@ -1,0 +1,45 @@
+using Gtk 4.0;
+using He 1;
+
+template LogyoPreferencesWindow : He.SettingsWindow {
+    default-width: 440;
+    default-height: 440;
+    modal: true;
+
+    [page]
+    He.SettingsPage {
+        title: _("Preferences");
+        margin-bottom: 12;
+
+        He.SettingsList {
+            title: _("Notifications");
+
+            He.SettingsRow {
+                title: _("Midday Check-in");
+                activatable-widget: midday_switch;
+
+                Gtk.Switch midday_switch {
+                    halign: end;
+                }
+            }
+
+            He.SettingsRow {
+                sensitive: bind midday_switch.active;
+                title: _("Midday Time");
+
+                He.TimePicker midday_time_picker {
+                    halign: end;
+                }
+            }
+
+            He.SettingsRow {
+                title: _("Evening Reflection");
+                activatable-widget: evening_switch;
+
+                Gtk.Switch evening_switch {
+                    halign: end;
+                }
+            }
+        }
+    }
+}

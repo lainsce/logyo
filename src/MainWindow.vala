@@ -2,6 +2,7 @@
 public class Logyo.MainWindow : He.ApplicationWindow {
     private const GLib.ActionEntry APP_ENTRIES[] = {
         { "about", action_about },
+        { "preferences", action_preferences },
     };
 
     [GtkChild]
@@ -654,6 +655,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             He.AboutWindow.Licenses.GPLV3,
             He.Colors.MINT
         ).present ();
+    }
+
+    private void action_preferences () {
+        var prefs_window = new Logyo.PreferencesWindow (this);
+        prefs_window.parent = this;
+        prefs_window.present ();
     }
 
     private string get_mood_icon(int value) {
