@@ -165,12 +165,12 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             show_export_dialog (logs3);
         });
 
-        var scroll_controller = new Gtk.EventControllerScroll (Gtk.EventControllerScrollFlags.BOTH_AXES);
+        var scroll_controller = new Gtk.EventControllerScroll (Gtk.EventControllerScrollFlags.VERTICAL);
         scroll_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE);
 
         scroll_controller.scroll.connect((dx, dy) => {
             var hadjustment = scrolled_window.get_hadjustment();
-            hadjustment.value += dy * hadjustment.step_increment; // Scroll horizontally using dy
+            hadjustment.value += dy * hadjustment.step_increment * 2; // Scroll horizontally using dy
 
             return true;
         });
