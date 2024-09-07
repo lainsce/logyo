@@ -371,8 +371,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             all_day_cb.active ? now.format ("%d/%m") : time_picker.time.format ("%H:%M @ %d/%m"),
             emo_label.get_label (),
             emo_image.get_icon_name (),
-            make_selection_string (motivation_group.selected_values),
-            m_emo_desc.label
+            m_emo_desc.label,
+            make_selection_string (motivation_group.selected_values)
         };
         var log_widget = new LogWidget (log_struct);
         add_log_to_layout (log_widget);
