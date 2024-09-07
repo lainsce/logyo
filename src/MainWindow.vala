@@ -215,7 +215,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 sheet.remove_css_class ("logyo-feeling-flat");
                 logged_pic.remove_css_class("blurry-image");
                 logged_box.remove_css_class("label-overlay");
-                update_color (ColorConstants.get_color_for_mood(3));
+                update_color (ColorConstants.get_color_for_mood(4));
                 sheet.title = null;
                 navrail.visible = true;
                 emo_image.icon_name = "neutral-symbolic";
@@ -258,8 +258,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("timed");
                 sheet.back_button.set_visible (false);
                 sheet.remove_css_class ("logyo-feeling");
-                update_color (ColorConstants.get_color_for_mood(3));
-                emo_slider.scale.set_value (3); // Neutral
+                update_color (ColorConstants.get_color_for_mood(4));
+                emo_slider.scale.set_value (4); // Neutral
                 sheet.title = null;
                 emo_image.icon_name = "neutral-symbolic";
             } else if (stack.get_visible_child_name () == "description") {
@@ -276,7 +276,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                     sheet.show_sheet = false;
                     sheet.remove_css_class ("logyo-feeling");
                     sheet.remove_css_class ("logyo-feeling-flat");
-                    update_color (ColorConstants.get_color_for_mood(3));
+                    update_color (ColorConstants.get_color_for_mood(4));
                     sheet.title = null;
                     emo_image.icon_name = "neutral-symbolic";
                 }
@@ -294,8 +294,8 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 stack.set_visible_child_name ("feeling");
                 sheet.back_button.set_visible (true);
                 sheet.add_css_class ("logyo-feeling");
-                update_color (ColorConstants.get_color_for_mood(3));
-                emo_slider.scale.set_value (3); // Neutral
+                update_color (ColorConstants.get_color_for_mood(4));
+                emo_slider.scale.set_value (4); // Neutral
                 if (timed_cb.active == true) {
                     sheet.title = _("Emotion");
                     feeling_prompt_label.label = _("Choose how you're feeling right now");
@@ -315,7 +315,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
             }
         });
 
-        Gtk.Adjustment adj = new Gtk.Adjustment (3.0, 0.0, 6.0, 1.0, 0.0, 0.0);
+        Gtk.Adjustment adj = new Gtk.Adjustment (4.0, 1.0, 7.0, 1.0, 0.0, 0.0);
         emo_slider.scale.set_digits (0);
         emo_slider.scale.set_round_digits (0);
         emo_slider.scale.set_adjustment (adj);
@@ -407,7 +407,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         sheet.remove_css_class ("logyo-feeling-flat");
         logged_pic.remove_css_class("blurry-image");
         logged_box.remove_css_class("label-overlay");
-        update_color (ColorConstants.get_color_for_mood(3));
+        update_color (ColorConstants.get_color_for_mood(4));
         emo_image.icon_name = "neutral-symbolic";
         description_group.reset_selections ();
         motivation_group.reset_selections ();
@@ -658,40 +658,40 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private string get_mood_icon(int value) {
         switch (value) {
-            case 0: return "very-unpleasant";
-            case 1: return "unpleasant";
-            case 2: return "slightly-unpleasant";
-            case 3: return "neutral";
-            case 4: return "slightly-pleasant";
-            case 5: return "pleasant";
-            case 6: return "very-pleasant";
+            case 1: return "very-unpleasant";
+            case 2: return "unpleasant";
+            case 3: return "slightly-unpleasant";
+            case 4: return "neutral";
+            case 5: return "slightly-pleasant";
+            case 6: return "pleasant";
+            case 7: return "very-pleasant";
             default: return "neutral";
         }
     }
 
     private string get_mood_label(int value) {
         switch (value) {
-            case 0: return _("Very Unpleasant");
-            case 1: return _("Unpleasant");
-            case 2: return _("Slightly Unpleasant");
-            case 3: return _("Neutral");
-            case 4: return _("Slightly Pleasant");
-            case 5: return _("Pleasant");
-            case 6: return _("Very Pleasant");
+            case 1: return _("Very Unpleasant");
+            case 2: return _("Unpleasant");
+            case 3: return _("Slightly Unpleasant");
+            case 4: return _("Neutral");
+            case 5: return _("Slightly Pleasant");
+            case 6: return _("Pleasant");
+            case 7: return _("Very Pleasant");
             default: return _("Neutral");
         }
     }
 
     private int map_feeling_to_number (string feeling) {
         switch (feeling) {
-            case "very-unpleasant": return 0;
-            case "unpleasant": return 1;
-            case "slightly-unpleasant": return 2;
-            case "neutral": return 3;
-            case "slightly-pleasant": return 4;
-            case "pleasant": return 5;
-            case "very-pleasant": return 6;
-            default: return 3;
+            case "very-unpleasant": return 1;
+            case "unpleasant": return 2;
+            case "slightly-unpleasant": return 3;
+            case "neutral": return 4;
+            case "slightly-pleasant": return 5;
+            case "pleasant": return 6;
+            case "very-pleasant": return 7;
+            default: return 4;
         }
     }
 
