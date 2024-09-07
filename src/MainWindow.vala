@@ -481,6 +481,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                         }]
                     },
                     options: {
+                        responsive: true,
                         scales: {
                             x: {
                                 title: {
@@ -493,9 +494,30 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                                     display: true,
                                     text: 'Mood'
                                 },
-                                min: 1,
-                                max: 7
+                                ticks: {
+                                    callback: (val) => {
+                                        const values = [
+                                            '',
+                                            'Very Unpleasant',
+                                            'Unpleasant',
+                                            'Slightly Unpleasant',
+                                            'Neutral',
+                                            'Slightly Pleasant',
+                                            'Pleasant',
+                                            'Very Pleasant',
+                                            ''
+                                        ];
+                                        return '' + values[val];
+                                    },
+                                },
+                                min: 0,
+                                max: 8
                             }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
                         }
                     }
                 });
@@ -511,7 +533,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         foreach (var log in plogs) {
             labels.append ("\"%s\"".printf (log.time));
-            data.append (map_feeling_to_number (log.feeling_icon).to_string ());
+            data.append ((map_feeling_to_number (log.feeling_icon)).to_string ());
             point_colors.append ("\"%s\"".printf (get_color_for_feeling (log.feeling_icon)));
         }
 
