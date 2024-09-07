@@ -110,15 +110,15 @@ public class Logyo.LogWidget : Gtk.FlowBoxChild {
 
         if (_log_struct.time.contains ("@")) {
             if (_log_struct.feeling[0] == 'U') {
-                feelingl.label = "%s".printf (_("An") + " " + _log_struct.feeling + " " + _("Day"));
-            } else {
-                feelingl.label = "%s".printf (_("A") + " " + _log_struct.feeling + " " + _("Day"));
-            }
-        } else {
-            if (_log_struct.feeling[0] == 'U') {
                 feelingl.label = "%s".printf (_("An") + " " + _log_struct.feeling + " " + _("Time"));
             } else {
                 feelingl.label = "%s".printf (_("A") + " " + _log_struct.feeling + " " + _("Time"));
+            }
+        } else {
+            if (_log_struct.feeling[0] == 'U') {
+                feelingl.label = "%s".printf (_("An") + " " + _log_struct.feeling + " " + _("Day"));
+            } else {
+                feelingl.label = "%s".printf (_("A") + " " + _log_struct.feeling + " " + _("Day"));
             }
         }
 
