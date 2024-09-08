@@ -81,9 +81,18 @@ public class ChipGroup : He.Bin {
 
     public void set_selections (List<string> selections) {
         foreach (var button in buttons) {
-            button.active = selections.find_custom (button.label, strcmp) != null;
+            selected_values = null;
+            if (selections.find_custom (button.label, strcmp) != null) {
+                button.active = true;
+                update_selected_values ();
+                selection_changed ();
+            } else {
+                button.active = false;
+                foreach (string option in selections) {
+                    selected_values.append (option);
+                }
+                selection_changed ();
+            }
         }
-        update_selected_values ();
-        selection_changed ();
     }
 }
