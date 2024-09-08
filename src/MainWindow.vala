@@ -56,6 +56,15 @@ public class Logyo.MainWindow : He.ApplicationWindow {
     private unowned He.Button next_button_d;
     [GtkChild]
     private unowned Gtk.Box description_box;
+    [GtkChild]
+    private unowned He.Button view_more_button;
+    [GtkChild]
+    private unowned He.BottomSheet all_feelings_sheet;
+    [GtkChild]
+    private unowned Gtk.FlowBox all_feelings_list;
+
+    private ChipGroup all_feelings_group;
+    private const int INITIAL_FEELINGS_COUNT = 17;
 
     [GtkChild]
     private unowned He.Button next_button_m;
@@ -186,8 +195,21 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
         scrolled_window.add_controller(scroll_controller);
 
-        description_group = new ChipGroup (FeelingConstants.descriptions);
-        description_box.append (description_group);
+        description_group = new ChipGroup (FeelingConstants.descriptions, INITIAL_FEELINGS_COUNT);
+        description_box.prepend (description_group);
+
+        all_feelings_group = new ChipGroup (FeelingConstants.descriptions);
+        all_feelings_list.append (all_feelings_group);
+
+        view_more_button.clicked.connect (() => {
+            all_feelings_sheet.show_sheet = true;
+        });
+
+        all_feelings_sheet.notify["show-sheet"].connect (() => {
+            if (!all_feelings_sheet.show_sheet) {
+                description_group.set_selections (all_feelings_group.selected_values);
+            }
+        });
 
         motivation_group = new ChipGroup (FeelingConstants.motivations);
         motivation_box.append (motivation_group);
@@ -574,6 +596,7 @@ public class Logyo.MainWindow : He.ApplicationWindow {
 
     private void on_add_clicked () {
         sheet.show_sheet = true;
+        //all_feelings_sheet.show_sheet = true;
         navrail.visible = false;
         if (is_first_run) {
             stack.set_visible_child_name ("first-run");

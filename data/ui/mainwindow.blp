@@ -27,259 +27,109 @@ template LogyoMainWindow : He.ApplicationWindow {
 
         child: Gtk.Overlay {
           [overlay]
-          He.BottomSheet sheet {
-            preferred-sheet-height: 720;
+          He.BottomSheet all_feelings_sheet {
+            title: _("All Feelings");
+            preferred-sheet-height: 655;
             show-handle: false;
-            sheet-stack: Gtk.Stack stack {
-              width-request: 352;
-              vexpand: true;
-              margin-bottom: 12;
-
-              Gtk.StackPage {
-                name: "first-run";
-                child: Gtk.Box {
-                  orientation: vertical;
-                  vexpand: true;
-                  spacing: 24;
-
-                  Gtk.Image {
-                    icon-name: "all-feelings";
-                    pixel-size: 128;
-                  }
-
-                  Gtk.Label {
-                    label: _("Support your Mental Wellbeing");
-                    styles ["view-subtitle"]
-                  }
-
-                  Gtk.Box {
-                    orientation: vertical;
-                    spacing: 12;
-                    halign: start;
-
-                    Gtk.Label {
-                      label: _("The Benefits of Logging");
-                      halign: start;
-                      styles ["cb-title"]
-                    }
-
-                    Gtk.Label {
-                      width-chars: 1;
-                      wrap: true;
-                      width-request: 275;
-                      halign: start;
-                      label: _("Regularly logging your emotions and moods can help you understand patterns in your mental wellbeing, identify triggers, and track your progress over time. This self-awareness can lead to better emotional regulation and improved overall mental health.");
-                    }
-                  }
-
-                  Gtk.Box {
-                    orientation: vertical;
-                    spacing: 12;
-                    halign: start;
-
-                    Gtk.Label {
-                      label: _("Emotions vs. Moods");
-                      halign: start;
-                      styles ["cb-title"]
-                    }
-
-                    Gtk.Label {
-                      width-chars: 1;
-                      wrap: true;
-                      width-request: 275;
-                      halign: start;
-                      label: _("Emotions are brief, intense feelings in response to specific stimuli, while moods are longer-lasting, less intense states that may not have a clear cause. Recognizing this difference can help you better understand and manage your mental state.");
-                    }
-                  }
-
-                  He.Button begin_button {
-                    label: _("Begin");
-                    is-pill: true;
-                    vexpand: true;
-                    valign: end;
-                    color: blue;
-                  }
-                };
+            sheet: Gtk.ScrolledWindow {
+              hscrollbar-policy: never;
+              Gtk.FlowBox all_feelings_list {
+                vexpand: true;
+                halign: center;
+                orientation: vertical;
               }
+            };
+          }
 
-              Gtk.StackPage {
-                name: "timed";
-                child: Gtk.Box {
-                  orientation: vertical;
+          Gtk.Overlay {
+            [overlay]
+            He.BottomSheet sheet {
+              preferred-sheet-height: 720;
+              show-handle: false;
+              sheet-stack: Gtk.Stack stack {
+                width-request: 352;
+                vexpand: true;
+                margin-bottom: 12;
 
-                  Gtk.Image {
-                    icon-name: "all-feelings";
-                    pixel-size: 128;
-                  }
-
-                  Gtk.Label {
-                    label: _("Log an Emotion or Mood");
-                    width-chars: 1;
-                    halign: center;
-                    justify: center;
-                    wrap: true;
-
-                    styles [
-                      "view-title"
-                    ]
-                  }
-
-                  Gtk.Box {
-                    vexpand: true;
+                Gtk.StackPage {
+                  name: "first-run";
+                  child: Gtk.Box {
                     orientation: vertical;
-                    spacing: 12;
-                    margin-top: 32;
-                    margin-bottom: 18;
-
-                    Gtk.CheckButton timed_cb {
-                      active: true;
-                      child: Gtk.Box {
-                        orientation: vertical;
-                        valign: center;
-                        spacing: 6;
-
-                        Gtk.Box {
-                          spacing: 6;
-                          valign: center;
-
-                          Gtk.Image {
-                            valign: center;
-                            icon-name: "clock-symbolic";
-
-                            styles [
-                              "dim-label"
-                            ]
-                          }
-                          Gtk.Label {
-                            valign: center;
-                            halign: start;
-                            label: _("Emotion");
-                            width-chars: 1;
-                            wrap: true;
-
-                            styles [
-                              "caption",
-                              "dim-label"
-                            ]
-                          }
-                        }
-
-                        Gtk.Label {
-                          halign: start;
-                          label: _("How you feel right now");
-                          width-chars: 1;
-                          wrap: true;
-
-                          styles [
-                            "cb-title"
-                          ]
-                        }
-
-                        He.TimePicker time_picker {
-                          can-target: false;
-
-                          styles [
-                            "outline"
-                          ]
-                        }
-                      };
-
-                      styles [
-                          "logyo-checkbutton"
-                      ]
-                    }
-                    Gtk.CheckButton all_day_cb {
-                      group: timed_cb;
-                      child: Gtk.Box {
-                        orientation: vertical;
-                        spacing: 6;
-
-                        Gtk.Box {
-                          spacing: 6;
-                          valign: center;
-
-                          Gtk.Image {
-                            valign: center;
-                            icon-name: "daytime-sunrise-symbolic";
-
-                            styles [
-                              "dim-label"
-                            ]
-                          }
-                          Gtk.Label {
-                            halign: start;
-                            valign: center;
-                            label: _("Mood");
-                            width-chars: 1;
-                            wrap: true;
-
-                            styles [
-                              "caption",
-                              "dim-label"
-                            ]
-                          }
-                        }
-
-                        Gtk.Label {
-                          halign: start;
-                          valign: center;
-                          label: _("How you've felt overall today");
-                          width-chars: 1;
-                          wrap: true;
-
-                          styles [
-                            "cb-title"
-                          ]
-                        }
-                      };
-
-                      styles [
-                        "logyo-checkbutton"
-                      ]
-                    }
-                  }
-
-                  He.Button next_button_t {
-                    is-pill: true;
-                    label: _("Next");
-                  }
-                };
-              }
-
-              Gtk.StackPage {
-                name: "feeling";
-                child: Gtk.Box {
-                  orientation: vertical;
-
-                  Gtk.Label feeling_prompt_label {
-                    width-chars: 1;
-                    justify: center;
-                    wrap: true;
-                    width-request: 275;
-
-                    styles [
-                      "view-subtitle"
-                    ]
-                  }
-
-                  Gtk.Box {
                     vexpand: true;
-                    orientation: vertical;
-                    margin-top: 18;
-                    margin-bottom: 18;
+                    spacing: 24;
 
-                    Gtk.Image emo_image {
-                      pixel-size: 300;
-                      halign: center;
-                      icon-name: "neutral-symbolic";
-
-                      styles [
-                        "content-block-image"
-                      ]
+                    Gtk.Image {
+                      icon-name: "all-feelings";
+                      pixel-size: 128;
                     }
 
-                    Gtk.Label emo_label {
-                      label: _("Neutral");
+                    Gtk.Label {
+                      label: _("Support your Mental Wellbeing");
+                      styles ["view-subtitle"]
+                    }
+
+                    Gtk.Box {
+                      orientation: vertical;
+                      spacing: 12;
+                      halign: start;
+
+                      Gtk.Label {
+                        label: _("The Benefits of Logging");
+                        halign: start;
+                        styles ["cb-title"]
+                      }
+
+                      Gtk.Label {
+                        width-chars: 1;
+                        wrap: true;
+                        width-request: 275;
+                        halign: start;
+                        label: _("Regularly logging your emotions and moods can help you understand patterns in your mental wellbeing, identify triggers, and track your progress over time. This self-awareness can lead to better emotional regulation and improved overall mental health.");
+                      }
+                    }
+
+                    Gtk.Box {
+                      orientation: vertical;
+                      spacing: 12;
+                      halign: start;
+
+                      Gtk.Label {
+                        label: _("Emotions vs. Moods");
+                        halign: start;
+                        styles ["cb-title"]
+                      }
+
+                      Gtk.Label {
+                        width-chars: 1;
+                        wrap: true;
+                        width-request: 275;
+                        halign: start;
+                        label: _("Emotions are brief, intense feelings in response to specific stimuli, while moods are longer-lasting, less intense states that may not have a clear cause. Recognizing this difference can help you better understand and manage your mental state.");
+                      }
+                    }
+
+                    He.Button begin_button {
+                      label: _("Begin");
+                      is-pill: true;
+                      vexpand: true;
+                      valign: end;
+                      color: blue;
+                    }
+                  };
+                }
+
+                Gtk.StackPage {
+                  name: "timed";
+                  child: Gtk.Box {
+                    orientation: vertical;
+
+                    Gtk.Image {
+                      icon-name: "all-feelings";
+                      pixel-size: 128;
+                    }
+
+                    Gtk.Label {
+                      label: _("Log an Emotion or Mood");
                       width-chars: 1;
                       halign: center;
                       justify: center;
@@ -290,348 +140,521 @@ template LogyoMainWindow : He.ApplicationWindow {
                       ]
                     }
 
-                    He.Slider emo_slider {
-                      margin-top: 24;
-                      margin-bottom: 6;
+                    Gtk.Box {
+                      vexpand: true;
+                      orientation: vertical;
+                      spacing: 12;
+                      margin-top: 32;
+                      margin-bottom: 18;
+
+                      Gtk.CheckButton timed_cb {
+                        active: true;
+                        child: Gtk.Box {
+                          orientation: vertical;
+                          valign: center;
+                          spacing: 6;
+
+                          Gtk.Box {
+                            spacing: 6;
+                            valign: center;
+
+                            Gtk.Image {
+                              valign: center;
+                              icon-name: "clock-symbolic";
+
+                              styles [
+                                "dim-label"
+                              ]
+                            }
+                            Gtk.Label {
+                              valign: center;
+                              halign: start;
+                              label: _("Emotion");
+                              width-chars: 1;
+                              wrap: true;
+
+                              styles [
+                                "caption",
+                                "dim-label"
+                              ]
+                            }
+                          }
+
+                          Gtk.Label {
+                            halign: start;
+                            label: _("How you feel right now");
+                            width-chars: 1;
+                            wrap: true;
+
+                            styles [
+                              "cb-title"
+                            ]
+                          }
+
+                          He.TimePicker time_picker {
+                            can-target: false;
+
+                            styles [
+                              "outline"
+                            ]
+                          }
+                        };
+
+                        styles [
+                            "logyo-checkbutton"
+                        ]
+                      }
+                      Gtk.CheckButton all_day_cb {
+                        group: timed_cb;
+                        child: Gtk.Box {
+                          orientation: vertical;
+                          spacing: 6;
+
+                          Gtk.Box {
+                            spacing: 6;
+                            valign: center;
+
+                            Gtk.Image {
+                              valign: center;
+                              icon-name: "daytime-sunrise-symbolic";
+
+                              styles [
+                                "dim-label"
+                              ]
+                            }
+                            Gtk.Label {
+                              halign: start;
+                              valign: center;
+                              label: _("Mood");
+                              width-chars: 1;
+                              wrap: true;
+
+                              styles [
+                                "caption",
+                                "dim-label"
+                              ]
+                            }
+                          }
+
+                          Gtk.Label {
+                            halign: start;
+                            valign: center;
+                            label: _("How you've felt overall today");
+                            width-chars: 1;
+                            wrap: true;
+
+                            styles [
+                              "cb-title"
+                            ]
+                          }
+                        };
+
+                        styles [
+                          "logyo-checkbutton"
+                        ]
+                      }
+                    }
+
+                    He.Button next_button_t {
+                      is-pill: true;
+                      label: _("Next");
+                    }
+                  };
+                }
+
+                Gtk.StackPage {
+                  name: "feeling";
+                  child: Gtk.Box {
+                    orientation: vertical;
+
+                    Gtk.Label feeling_prompt_label {
+                      width-chars: 1;
+                      justify: center;
+                      wrap: true;
+                      width-request: 275;
+
+                      styles [
+                        "view-subtitle"
+                      ]
                     }
 
                     Gtk.Box {
-                      hexpand: true;
+                      vexpand: true;
+                      orientation: vertical;
+                      margin-top: 18;
+                      margin-bottom: 18;
 
-                      Gtk.Label {
-                        label: _("Very Unpleasant");
-                        hexpand: true;
-                        halign: start;
+                      Gtk.Image emo_image {
+                        pixel-size: 300;
+                        halign: center;
+                        icon-name: "neutral-symbolic";
 
                         styles [
-                          "slider-caption",
-                          "dim-label"
+                          "content-block-image"
                         ]
                       }
 
-                      Gtk.Label {
-                        label: _("Very Pleasant");
-                        hexpand: true;
-                        halign: end;
+                      Gtk.Label emo_label {
+                        label: _("Neutral");
+                        width-chars: 1;
+                        halign: center;
+                        justify: center;
+                        wrap: true;
 
                         styles [
-                          "slider-caption",
-                          "dim-label"
+                          "view-title"
                         ]
                       }
+
+                      He.Slider emo_slider {
+                        margin-top: 24;
+                        margin-bottom: 6;
+                      }
+
+                      Gtk.Box {
+                        hexpand: true;
+
+                        Gtk.Label {
+                          label: _("Very Unpleasant");
+                          hexpand: true;
+                          halign: start;
+
+                          styles [
+                            "slider-caption",
+                            "dim-label"
+                          ]
+                        }
+
+                        Gtk.Label {
+                          label: _("Very Pleasant");
+                          hexpand: true;
+                          halign: end;
+
+                          styles [
+                            "slider-caption",
+                            "dim-label"
+                          ]
+                        }
+                      }
                     }
-                  }
 
-                  He.Button next_button_f {
-                    is-pill: true;
-                    label: _("Next");
-                  }
-                };
-              }
+                    He.Button next_button_f {
+                      is-pill: true;
+                      label: _("Next");
+                    }
+                  };
+                }
 
-              Gtk.StackPage {
-                name: "description";
-                child: Gtk.Box {
-                  orientation: vertical;
+                Gtk.StackPage {
+                  name: "description";
+                  child: Gtk.Box {
+                    orientation: vertical;
 
-                  Gtk.Image d_emo_image {
-                    pixel-size: 128;
-                    halign: center;
-                    margin-top: 24;
-                    icon-name: bind emo_image.icon_name;
-
-                    styles [
-                      "content-block-image"
-                    ]
-                  }
-
-                  Gtk.Label d_emo_label {
-                    label: bind emo_label.label;
-                    width-chars: 1;
-                    halign: center;
-                    justify: center;
-                    wrap: true;
-
-                    styles [
-                      "view-subtitle"
-                    ]
-                  }
-
-                  Gtk.Box {
-                    spacing: 12;
-                    margin-top: 36;
-
-                    Gtk.Label description_label {
-                      label: _("What best describes this feeling?");
-                      width-chars: 1;
-                      justify: center;
-                      wrap: true;
-                      width-request: 275;
+                    Gtk.Image d_emo_image {
+                      pixel-size: 128;
+                      halign: center;
+                      margin-top: 24;
+                      icon-name: bind emo_image.icon_name;
 
                       styles [
-                        "cb-subtitle"
+                        "content-block-image"
                       ]
                     }
 
-                    Gtk.Image {
-                      icon-name: "dialog-information-symbolic";
-                      tooltip-text: _("Narrowing down to the thing you're feeling most can help you understand how you're responding and what you may need in a given moment.");
-                      halign: end;
-                      valign: end;
-                      hexpand: true;
-                    }
-                  }
-
-
-                  He.Divider {}
-
-                  Gtk.ScrolledWindow {
-                    hscrollbar-policy: never;
-                    Gtk.Box description_box {
-                      vexpand: true;
-                      halign: center;
-                      orientation: vertical;
-                      spacing: 12;
-                      margin-bottom: 18;
-                    }
-                  }
-
-                  He.Button next_button_d {
-                    is-pill: true;
-                    label: _("Next");
-                  }
-                };
-              }
-
-              Gtk.StackPage {
-                name: "motivation";
-                child: Gtk.Box {
-                  orientation: vertical;
-
-                  Gtk.Image m_emo_image {
-                    pixel-size: 128;
-                    halign: center;
-                    margin-top: 24;
-                    icon-name: bind d_emo_image.icon_name;
-
-                    styles [
-                      "content-block-image"
-                    ]
-                  }
-
-                  Gtk.Label m_emo_label {
-                    label: bind d_emo_label.label;
-                    width-chars: 1;
-                    halign: center;
-                    justify: center;
-                    wrap: true;
-
-                    styles [
-                      "view-subtitle"
-                    ]
-                  }
-
-                  Gtk.Label m_emo_desc {
-                    width-chars: 1;
-                    halign: center;
-                    justify: center;
-                    wrap: true;
-
-                    styles [
-                      "cb-subtitle"
-                    ]
-                  }
-
-                  Gtk.Box {
-                    spacing: 12;
-                    margin-top: 18;
-
-                    Gtk.Label motivation_label {
-                      label: _("What is affecting you the most?");
+                    Gtk.Label d_emo_label {
+                      label: bind emo_label.label;
                       width-chars: 1;
+                      halign: center;
                       justify: center;
                       wrap: true;
-                      width-request: 275;
 
                       styles [
-                        "cb-subtitle"
+                        "view-subtitle"
                       ]
                     }
 
-                    Gtk.Image {
-                      icon-name: "dialog-information-symbolic";
-                      tooltip-text: _("Adding context to a moment can help you see patterns in the things that are having an effect on your mental wellbeing.");
-                      halign: end;
-                      valign: end;
-                      hexpand: true;
-                    }
-                  }
-
-                  He.Divider {}
-
-                  Gtk.ScrolledWindow {
-                    hscrollbar-policy: never;
-                    Gtk.Box motivation_box {
-                      vexpand: true;
-                      valign: center;
-                      orientation: vertical;
+                    Gtk.Box {
                       spacing: 12;
-                      margin-bottom: 18;
-                    }
-                  }
+                      margin-top: 36;
 
-                  He.TextField motivation_text {
-                    placeholder-text: _("Optional description…");
-                    margin-top: 12;
-                    margin-bottom: 12;
-                    visible: false;
-                  }
+                      Gtk.Label description_label {
+                        label: _("What best describes this feeling?");
+                        width-chars: 1;
+                        justify: center;
+                        wrap: true;
+                        width-request: 275;
 
-                  He.Button next_button_m {
-                    is-pill: true;
-                    label: _("Log Feeling");
-                  }
-                };
-              }
-              Gtk.StackPage {
-                name: "logged";
-                child: Gtk.Box {
-                  orientation: vertical;
-
-                  Gtk.Overlay {
-                    valign: center;
-                    vexpand: true;
-
-                    [overlay]
-                    Gtk.Box logged_box {
-                      spacing: 12;
-                      halign: center;
-                      hexpand: true;
+                        styles [
+                          "cb-subtitle"
+                        ]
+                      }
 
                       Gtk.Image {
-                        icon-name: "emblem-default-symbolic";
-                        pixel-size: 24;
+                        icon-name: "dialog-information-symbolic";
+                        tooltip-text: _("Narrowing down to the thing you're feeling most can help you understand how you're responding and what you may need in a given moment.");
+                        halign: end;
+                        valign: end;
+                        hexpand: true;
                       }
-                      Gtk.Label {
-                        label: _("Logged!");
+                    }
+
+
+                    He.Divider {}
+
+                    Gtk.ScrolledWindow {
+                      hscrollbar-policy: never;
+                      Gtk.Box description_box {
+                        vexpand: true;
+                        halign: center;
+                        orientation: vertical;
+                        spacing: 12;
+                        margin-bottom: 18;
+
+                        He.Button view_more_button {
+                          label: _("View More");
+                          is-textual: true;
+                          halign: start;
+                        }
+                      }
+                    }
+
+                    He.Button next_button_d {
+                      is-pill: true;
+                      label: _("Next");
+                    }
+                  };
+                }
+
+                Gtk.StackPage {
+                  name: "motivation";
+                  child: Gtk.Box {
+                    orientation: vertical;
+
+                    Gtk.Image m_emo_image {
+                      pixel-size: 128;
+                      halign: center;
+                      margin-top: 24;
+                      icon-name: bind d_emo_image.icon_name;
+
+                      styles [
+                        "content-block-image"
+                      ]
+                    }
+
+                    Gtk.Label m_emo_label {
+                      label: bind d_emo_label.label;
+                      width-chars: 1;
+                      halign: center;
+                      justify: center;
+                      wrap: true;
+
+                      styles [
+                        "view-subtitle"
+                      ]
+                    }
+
+                    Gtk.Label m_emo_desc {
+                      width-chars: 1;
+                      halign: center;
+                      justify: center;
+                      wrap: true;
+
+                      styles [
+                        "cb-subtitle"
+                      ]
+                    }
+
+                    Gtk.Box {
+                      spacing: 12;
+                      margin-top: 18;
+
+                      Gtk.Label motivation_label {
+                        label: _("What is affecting you the most?");
+                        width-chars: 1;
+                        justify: center;
+                        wrap: true;
+                        width-request: 275;
 
                         styles [
-                          "cb-title"
+                          "cb-subtitle"
                         ]
+                      }
+
+                      Gtk.Image {
+                        icon-name: "dialog-information-symbolic";
+                        tooltip-text: _("Adding context to a moment can help you see patterns in the things that are having an effect on your mental wellbeing.");
+                        halign: end;
+                        valign: end;
+                        hexpand: true;
                       }
                     }
 
-                    Gtk.Image logged_pic {
-                      icon-name: bind d_emo_image.icon_name;
-                      pixel-size: 300;
+                    He.Divider {}
+
+                    Gtk.ScrolledWindow {
+                      hscrollbar-policy: never;
+                      Gtk.Box motivation_box {
+                        vexpand: true;
+                        valign: center;
+                        orientation: vertical;
+                        spacing: 12;
+                        margin-bottom: 18;
+                      }
                     }
-                  }
-                };
-              }
 
-              Gtk.StackPage {
-                name: "reminders";
-                child: Gtk.Box {
-                  orientation: vertical;
-                  vexpand: true;
-                  spacing: 24;
+                    He.TextField motivation_text {
+                      placeholder-text: _("Optional description…");
+                      margin-top: 12;
+                      margin-bottom: 12;
+                      visible: false;
+                    }
 
-                  Gtk.Image {
-                    icon-name: "notification-symbolic";
-                    pixel-size: 128;
-                  }
-
-                  Gtk.Label {
-                    label: _("Would you like notifications to log?");
-                    styles ["view-subtitle"]
-                  }
-
-                  Gtk.Label {
-                    label: _("Logging how you're feeling at least twice a day can help you get a better sense of your mental wellbeing.");
-                    wrap: true;
-                    width-chars: 1;
-                    justify: center;
-                  }
-
-                  Gtk.Box {
+                    He.Button next_button_m {
+                      is-pill: true;
+                      label: _("Log Feeling");
+                    }
+                  };
+                }
+                Gtk.StackPage {
+                  name: "logged";
+                  child: Gtk.Box {
                     orientation: vertical;
-                    spacing: 12;
-                    margin-top: 24;
+
+                    Gtk.Overlay {
+                      valign: center;
+                      vexpand: true;
+
+                      [overlay]
+                      Gtk.Box logged_box {
+                        spacing: 12;
+                        halign: center;
+                        hexpand: true;
+
+                        Gtk.Image {
+                          icon-name: "emblem-default-symbolic";
+                          pixel-size: 24;
+                        }
+                        Gtk.Label {
+                          label: _("Logged!");
+
+                          styles [
+                            "cb-title"
+                          ]
+                        }
+                      }
+
+                      Gtk.Image logged_pic {
+                        icon-name: bind d_emo_image.icon_name;
+                        pixel-size: 300;
+                      }
+                    }
+                  };
+                }
+
+                Gtk.StackPage {
+                  name: "reminders";
+                  child: Gtk.Box {
+                    orientation: vertical;
                     vexpand: true;
-                    valign: end;
+                    spacing: 24;
 
-                    He.Button notifications_button {
-                      label: _("Turn on Notifications");
-                      is-pill: true;
+                    Gtk.Image {
+                      icon-name: "notification-symbolic";
+                      pixel-size: 128;
                     }
 
-                    He.Button skip_button {
-                      label: _("Skip");
-                      is-pill: true;
-                      is-textual: true;
+                    Gtk.Label {
+                      label: _("Would you like notifications to log?");
+                      styles ["view-subtitle"]
                     }
-                  }
-                };
-              }
-            };
-          }
 
-          He.ViewMono {
-            titlewidget: He.ViewTitle {
-              label: _("Feelings");
-            };
-            show-back: false;
-            has-margins: false;
+                    Gtk.Label {
+                      label: _("Logging how you're feeling at least twice a day can help you get a better sense of your mental wellbeing.");
+                      wrap: true;
+                      width-chars: 1;
+                      justify: center;
+                    }
 
-            [titlebar-menu]
-            Gtk.MenuButton menu_button {
-              icon-name: "open-menu-symbolic";
-              menu-model: primary_menu;
+                    Gtk.Box {
+                      orientation: vertical;
+                      spacing: 12;
+                      margin-top: 24;
+                      vexpand: true;
+                      valign: end;
+
+                      He.Button notifications_button {
+                        label: _("Turn on Notifications");
+                        is-pill: true;
+                      }
+
+                      He.Button skip_button {
+                        label: _("Skip");
+                        is-pill: true;
+                        is-textual: true;
+                      }
+                    }
+                  };
+                }
+              };
             }
 
-            He.OverlayButton add_button {
-              typeb: primary;
-              icon: "list-add-symbolic";
+            He.ViewMono {
+              titlewidget: He.ViewTitle {
+                label: _("Feelings");
+              };
+              show-back: false;
+              has-margins: false;
 
-              Gtk.Box {
-                orientation: vertical;
+              [titlebar-menu]
+              Gtk.MenuButton menu_button {
+                icon-name: "open-menu-symbolic";
+                menu-model: primary_menu;
+              }
 
-                Gtk.Stack main_stack {
-                  Gtk.StackPage {
-                    name: "empty";
+              He.OverlayButton add_button {
+                typeb: primary;
+                icon: "list-add-symbolic";
 
-                    child: He.EmptyPage empty_page {
-                      icon: "empty-page-symbolic";
-                      title: _("No Logs");
-                      description: _("Start logging feelings with the + button.");
-                    };
-                  }
+                Gtk.Box {
+                  orientation: vertical;
 
-                  Gtk.StackPage {
-                    name: "list";
+                  Gtk.Stack main_stack {
+                    Gtk.StackPage {
+                      name: "empty";
 
-                    child: Gtk.ScrolledWindow scrolled_window {
-                      vscrollbar-policy: never;
-                      hscrollbar-policy: always;
+                      child: He.EmptyPage empty_page {
+                        icon: "empty-page-symbolic";
+                        title: _("No Logs");
+                        description: _("Start logging feelings with the + button.");
+                      };
+                    }
 
-                      Gtk.FlowBox feelings_list {
-                        vexpand-set: true;
-                        hexpand-set: true;
-                        halign: center;
-                        valign: center;
-                        margin-top: 6;
-                        margin-start: 18;
-                        margin-end: 10;
-                        margin-bottom: 6;
-                        orientation: vertical;
-                        max-children-per-line: 999;
-                        height-request: 400;
+                    Gtk.StackPage {
+                      name: "list";
 
-                        styles [
-                          "content-list"
-                        ]
-                      }
-                    };
+                      child: Gtk.ScrolledWindow scrolled_window {
+                        vscrollbar-policy: never;
+                        hscrollbar-policy: always;
+
+                        Gtk.FlowBox feelings_list {
+                          vexpand-set: true;
+                          hexpand-set: true;
+                          halign: center;
+                          valign: center;
+                          margin-top: 6;
+                          margin-start: 18;
+                          margin-end: 10;
+                          margin-bottom: 6;
+                          orientation: vertical;
+                          max-children-per-line: 999;
+                          height-request: 400;
+
+                          styles [
+                            "content-list"
+                          ]
+                        }
+                      };
+                    }
                   }
                 }
               }
