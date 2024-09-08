@@ -11,19 +11,19 @@
       <summary>Logging Notifications</summary>
       <description>Whether to notify the user to log their entries</description>
     </key>
-    <key name="midday-notification" type="b">
+    <key name="during-notification" type="b">
       <default>false</default>
-      <summary>Midday Notification</summary>
+      <summary>During Your Day Notification</summary>
       <description>Whether to notify the user to log their entries at a specified time, defaults to midday</description>
     </key>
-    <key name="midday-time" type="s">
+    <key name="during-time" type="s">
       <default>'12:00'</default>
-      <summary>Midday Time</summary>
-      <description>The specified time to notify user to log through the day</description>
+      <summary>Custom Time</summary>
+      <description>The customizable time to notify user to log through the day</description>
     </key>
-    <key name="evening-notification" type="b">
+    <key name="end-notification" type="b">
       <default>false</default>
-      <summary>Evening Notification</summary>
+      <summary>End Of Day Notification</summary>
       <description>Whether to notify the user to log their entries at the end of the day</description>
     </key>
   </schema>

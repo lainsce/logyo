@@ -151,9 +151,9 @@ public class Logyo.Application : He.Application {
         var settings = new Settings ("io.github.lainsce.Logyo");
         var now = new DateTime.now_local ();
 
-        if (settings.get_boolean ("midday-notification")) {
-            var midday_time = settings.get_string ("midday-time");
-            string[] time_parts = midday_time.split(":");
+        if (settings.get_boolean ("during-notification")) {
+            var during_time = settings.get_string ("during-time");
+            string[] time_parts = during_time.split(":");
 
             int hours = 12;
             int minutes = 0;
@@ -166,18 +166,18 @@ public class Logyo.Application : He.Application {
                     minutes = 0;
                 }
             }
-            var midday = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), hours, minutes, 0);
-            if (now.compare (midday) > 0) {
-                midday = midday.add_days (1);
+            var during = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), hours, minutes, 0);
+            if (now.compare (during) > 0) {
+                during = during.add_days (1);
             }
-            schedule_notification (_("Midday Check-in"), _("How are you feeling today?"), midday);
+            schedule_notification (_("During Your Day"), _("How are you feeling today?"), during);
         }
-        if (settings.get_boolean ("evening-notification")) {
-            var evening = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), 18, 0, 0);
-            if (now.compare (evening) > 0) {
-                evening = evening.add_days (1);
+        if (settings.get_boolean ("end-notification")) {
+            var end = new DateTime.local (now.get_year (), now.get_month (), now.get_day_of_month (), 18, 0, 0);
+            if (now.compare (end) > 0) {
+                end = end.add_days (1);
             }
-            schedule_notification (_("Evening Reflection"), _("Take a moment to reflect on your day."), evening);
+            schedule_notification (_("End of Day"), _("Take a moment to reflect on your day."), end);
         }
     }
 

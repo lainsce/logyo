@@ -15,28 +15,28 @@ template LogyoPreferencesWindow : He.SettingsWindow {
             title: _("Notifications");
 
             He.SettingsRow {
-                title: _("Midday Check-in");
-                activatable-widget: midday_switch;
+                title: _("During Your Day");
+                activatable-widget: during_switch;
 
-                Gtk.Switch midday_switch {
+                Gtk.Switch during_switch {
                     halign: end;
                 }
             }
 
             He.SettingsRow {
-                sensitive: bind midday_switch.active;
-                title: _("Midday Time");
+                sensitive: bind during_switch.active;
+                title: _("Custom Time");
 
-                He.TimePicker midday_time_picker {
+                He.TimePicker during_time_picker {
                     halign: end;
                 }
             }
 
             He.SettingsRow {
-                title: _("Evening Reflection");
-                activatable-widget: evening_switch;
+                title: _("End of Day");
+                activatable-widget: end_switch;
 
-                Gtk.Switch evening_switch {
+                Gtk.Switch end_switch {
                     halign: end;
                 }
             }
