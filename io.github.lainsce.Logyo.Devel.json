@@ -1,0 +1,61 @@
+{
+    "runtime" : "com.fyralabs.Platform",
+    "runtime-version" : "daily",
+    "sdk" : "com.fyralabs.Sdk",
+    "command" : "io.github.lainsce.Logyo",
+    "finish-args" : [
+        "--filesystem=xdg-run/gvfsd",
+        "--socket=wayland",
+        "--socket=fallback-x11",
+        "--share=ipc",
+        "--device=dri"
+    ],
+    "desktop-file-name-suffix" : " (Development)",
+    "cleanup" : [
+        "/cache",
+        "/man",
+        "/share/aclocal",
+        "/share/devhelp",
+        "/lib/systemd",
+        "/include",
+        "/lib/pkgconfig",
+        "/lib/libvala*",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/vala",
+        "*.a",
+        "*.la"
+    ],
+    "modules" : [
+        {
+            "name": "libportal",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dbackends=['gtk4']",
+                "-Ddocs=false",
+                "-Dtests=false"
+            ],
+            "sources": [
+                {
+                "type": "git",
+                "url": "https://github.com/flatpak/libportal.git",
+                "tag": "0.6"
+                }
+            ]
+        },
+        {
+            "name" : "logyo",
+            "builddir" : true,
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Ddevelopment=true"
+            ],
+            "sources" : [
+                {
+                    "type" : "dir",
+                    "path" : "."
+                }
+            ]
+        }
+    ]
+}
