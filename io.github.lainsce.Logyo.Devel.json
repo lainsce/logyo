@@ -1,6 +1,6 @@
 {
     "runtime" : "com.fyralabs.Platform",
-    "runtime-version" : "daily",
+    "runtime-version" : "stable",
     "sdk" : "com.fyralabs.Sdk",
     "command" : "io.github.lainsce.Logyo",
     "finish-args" : [
