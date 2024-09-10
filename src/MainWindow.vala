@@ -377,8 +377,6 @@ public class Logyo.MainWindow : He.ApplicationWindow {
                 });
             }
         });
-
-        close_request.connect (() => on_close_request ());
     }
 
     private void make_label (Gtk.Label label, List<string> list) {
@@ -445,9 +443,17 @@ public class Logyo.MainWindow : He.ApplicationWindow {
         }
     }
 
-    private bool on_close_request () {
-        var res = Application.app.remove_this_window (this);
-        return res;
+    protected override bool close_request () {
+        ((Application) application).ask_for_background.begin ((obj, res) => {
+            unowned var app = (Application) obj;
+            if (app.ask_for_background.end (res)) {
+                hide ();
+            } else {
+                destroy ();
+            }
+        });
+
+        return false;
     }
 
     private void show_export_dialog (List<LogWidget> elogs) {

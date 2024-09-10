@@ -4,16 +4,12 @@ public class Logyo.Application : He.Application {
         { "quit", quit },
     };
 
-    private const string BACKGROUND = "background";
     public static bool background;
-
-    private List<MainWindow> windows;
-    public unowned MainWindow main_window {
-        get { return (windows.length () > 0) ? windows.data : null; }
-    }
+    private Xdp.Portal? portal = null;
+    public MainWindow window;
 
     private const OptionEntry[] OPTIONS = {
-        { BACKGROUND, 'b', 0, OptionArg.NONE, out background, "Launch and run in background.", null },
+        { "background", 'b', 0, OptionArg.NONE, out background, "Launch and run in background.", null },
         { null }
     };
 
@@ -24,32 +20,11 @@ public class Logyo.Application : He.Application {
         );
 
         app = this;
-        windows = new List<MainWindow> ();
-
-        var action = new GLib.SimpleAction ("launch-in-bg", GLib.VariantType.STRING);
-        action.activate.connect ((param) => { open_in_bg (param.get_string ()); });
-        add_action (action);
     }
-
-    private void open_in_bg (string name) {
-        activate ();
-
-        main_window.present ();
-    }
-
-    private const string PORTAL_BUS_NAME = "org.freedesktop.portal.Desktop";
-    private const string PORTAL_OBJECT_PATH = "/org/freedesktop/portal/desktop";
-    private const string PORTAL_INTERFACE = "org.freedesktop.portal.Background";
-
-    private DBusConnection? connection = null;
 
     construct {
         add_main_option_entries (OPTIONS);
-        try {
-            connection = Bus.get_sync (BusType.SESSION);
-        } catch (Error e) {
-            error ("Failed to connect to session bus: %s", e.message);
-        }
+
         var settings = new Settings ("io.github.lainsce.Logyo");
         if (settings.get_boolean ("notifications-enabled")) {
             schedule_notifications ();
@@ -71,60 +46,24 @@ public class Logyo.Application : He.Application {
     protected override void activate () {
         base.activate ();
 
-        if (main_window != null)
-            return;
-
         if (background) {
-            request_background.begin ();
             background = false;
+            hold ();
+
+            ask_for_background.begin ((obj, res) => {
+                if (!ask_for_background.end (res)) {
+                    release ();
+                }
+            });
+        }
+
+        if (get_windows () != null) {
+            get_windows ().data.present (); // present window if app is already running
             return;
         }
 
-        add_new_window ();
-    }
-
-    public MainWindow add_new_window () {
-        var window = new MainWindow (this);
-
-        windows.append (window);
-        window.present ();
-
-        notify_property ("main-window");
-
-        return window;
-    }
-
-    public bool remove_this_window (MainWindow window) {
-        if (windows.length () == 1)
-            return quit_app ();
-
-        var initial_windows_count = windows.length ();
-
-        window.hide ();
-        windows.remove (window);
-        base.remove_window (window);
-
-        notify_property ("main-window");
-
-        return initial_windows_count != windows.length ();
-    }
-    public bool quit_app () {
-        foreach (var window in windows)
-            window.hide ();
-        // Ensure windows are hidden before returning from this function
-        var display = Gdk.Display.get_default ();
-        display.flush ();
-
-        if (background)
-            return true;
-
-        Idle.add (() => {
-            quit ();
-
-            return false;
-        });
-
-        return true;
+        window = new MainWindow (this);
+        window.show ();
     }
 
     public override void startup () {
@@ -194,17 +133,27 @@ public class Logyo.Application : He.Application {
         });
     }
 
-    public async void request_background () {
+    public async bool ask_for_background () {
+        const string[] DAEMON_COMMAND = { "io.github.lainsce.Logyo", "--background" };
+        if (portal == null) {
+            portal = new Xdp.Portal ();
+        }
+
+        string reason = _(
+            "Logyo will run when its window is closed so that it can send reminder notifications."
+        );
+        var command = new GenericArray<unowned string> (2);
+        foreach (unowned var arg in DAEMON_COMMAND) {
+            command.add (arg);
+        }
+
+        var window = Xdp.parent_new_gtk (active_window);
+
         try {
-            var portal = new Xdp.Portal.initable_new ();
-            var window = active_window;
-            var parent = Xdp.parent_new_gtk (window);
-            var reason = _("Logyo wants to run in background");
-            var cancellable = null;
-            yield portal.request_background (parent, reason, new GLib.GenericArray<weak string> (), NONE, cancellable);
-        } catch (GLib.Error error) {
-            warning ("Failed to request to run in background: %s", error.message);
-            background = false;
+            return yield portal.request_background (window, reason, command, AUTOSTART, null);
+        } catch (Error e) {
+            warning ("Error during portal request: %s", e.message);
+            return e is IOError.FAILED;
         }
     }
 }
