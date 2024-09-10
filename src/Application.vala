@@ -39,6 +39,15 @@ public class Logyo.Application : He.Application {
         Environment.set_prgname (Config.APP_ID);
         Environment.set_application_name (_("Logyo"));
 
+        var context = new OptionContext (_("Logyo"));
+        context.add_main_entries (OPTIONS, "io.github.lainsce.Logyo");
+
+        try {
+            context.parse (ref args);
+        } catch (Error e) {
+            warning (e.message);
+        }
+
         var app = new Logyo.Application ();
         return app.run (args);
     }
